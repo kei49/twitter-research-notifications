@@ -48,16 +48,7 @@ export default class TwitterClient {
       data = data.filter(d => d.public_metrics.like_count > likeCountFilter);
     }
 
-    console.log(data);
-    console.log("Number of data: ", data.length);
-    data.map((d: TweetsSearchData) => {
-      const tweetLink = `https://twitter.com/${d.author_id}/status/${d.id}`;
-      const publicMetrics = d.public_metrics;
-
-      console.log("LINK: ", tweetLink);
-      console.log("TEXT: ", d.text);
-      console.log(publicMetrics);
-    })
+    return data;
   }
 
   async countsRecent(params: any) {
