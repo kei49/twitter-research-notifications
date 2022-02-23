@@ -1,9 +1,9 @@
 // import cron from "node-cron";
 // import startCron from "./cron";
-import * as searchService from "./services/search.service";
-import * as countService from "./services/count.service";
+import * as searchController from "./controllers/search.controller";
+import * as countController from "./controllers/count.controller";
 
 (async function () {
-  await searchService.searchHackathon();
-  // await countService.countHackathon();
+  await searchController.searchHackathon();
+  // await countController.countHackathon();
 })();
