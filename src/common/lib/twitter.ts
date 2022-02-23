@@ -4,40 +4,39 @@ import { baseConfig, twitterAPI } from "../../config";
 
 type TweetsCountData = {
   data: {
-    end: string,
-    start: string,
-    tweet_count: number
-  }[],
+    end: string;
+    start: string;
+    tweet_count: number;
+  }[];
   meta: {
-    total_tweet_count: number
-  }
-}
+    total_tweet_count: number;
+  };
+};
 
 type TweetsSearchData = {
-  id: string,
-  author_id: string,
-  text: string,
+  id: string;
+  author_id: string;
+  text: string;
   public_metrics: {
-    retweet_count: number,
-    reply_count: number,
-    like_count: number,
-    quote_count: number
-  },
-  entities?: any
-}
+    retweet_count: number;
+    reply_count: number;
+    like_count: number;
+    quote_count: number;
+  };
+  entities?: any;
+};
 
 type SearchParams = {
-  'query': string,
-  'tweet.fields': any,
-  'since_id'?: string,
-  'max_results'?: number
-}
-
+  query: string;
+  "tweet.fields": any;
+  since_id?: string;
+  max_results?: number;
+};
 
 export default class TwitterClient {
   private async get(path: string, params?: any) {
     const url = twitterAPI.basePath + path;
-    const headers = { authorization: `Bearer ${baseConfig.token}` }
+    const headers = { authorization: `Bearer ${baseConfig.token}` };
 
     console.log(url, headers);
 
@@ -45,7 +44,7 @@ export default class TwitterClient {
       return await axios.get(url, { params, headers });
     }
 
-    return await axios.get(url, { headers }); 
+    return await axios.get(url, { headers });
   }
 
   async searchRecentAPI(params: SearchParams) {
@@ -64,11 +63,16 @@ export default class TwitterClient {
     return { data, totalTweetCount };
   }
 
-  async searchRecent(keywords: string, sinceId?: string, maxResults: number = 10, likeCountFilter: number = -1) {
+  async searchRecent(
+    keywords: string,
+    sinceId?: string,
+    maxResults: number = 10,
+    likeCountFilter: number = -1
+  ) {
     const params: SearchParams = {
-      'query': `${keywords} has:links has:hashtags -is:retweet`,
-      'tweet.fields': 'author_id,public_metrics,text,entities',
-    }
+      query: `${keywords} has:links has:hashtags -is:retweet`,
+      "tweet.fields": "author_id,public_metrics,text,entities",
+    };
 
     if (maxResults) {
       params.max_results = maxResults;
@@ -81,7 +85,7 @@ export default class TwitterClient {
     let data = await this.searchRecentAPI(params);
 
     if (likeCountFilter !== -1) {
-      data = data.filter(d => d.public_metrics.like_count > likeCountFilter);
+      data = data.filter((d) => d.public_metrics.like_count > likeCountFilter);
     }
 
     return data;
@@ -93,7 +97,7 @@ export default class TwitterClient {
     console.log("block of counts: ", data.length);
     console.log(data[0], data[data.length - 1]);
 
-    data.map(d => console.log(`count until ${d.end}: ${d.tweet_count}`));
+    data.map((d) => console.log(`count until ${d.end}: ${d.tweet_count}`));
 
     console.log("total tweet count: ", totalTweetCount);
   }

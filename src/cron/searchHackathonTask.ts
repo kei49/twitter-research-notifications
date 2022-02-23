@@ -15,14 +15,18 @@ export default async function searchHackathonTask() {
     "WBTC OR LINK OR UNI OR GRT OR AAVE OR MKR OR LRC OR CHZ OR CRV", // Defi https://www.okx.com/markets/prices/defi-cryptocurrency
     "DOT OR LINK OR MXC OR GLMR OR POLS OR ASTR OR CFG OR PHA OR OM OR DORA OR RFUEL OR KONO", // Polkadot https://www.okx.com/markets/prices/polkadot-cryptocurrency
     // "MANA OR SAND OR FLOW OR ENJ OR OMI OR CHZ OR APENFT OR LOOKS OR DEP OR GHST OR AGLD OR EFI OR TRA OR CELT", // NFT https://www.okx.com/markets/prices/nft-cryptocurrency
-  ]
+  ];
 
-  const hackathonKeyword = "ハッカソン OR Hackathon"
+  const hackathonKeyword = "ハッカソン OR Hackathon";
 
-  const keywords = addListQueryWithOr(hackathonKeyword, blockchainKeywords, true);
+  const keywords = addListQueryWithOr(
+    hackathonKeyword,
+    blockchainKeywords,
+    true
+  );
   console.log(keywords);
 
-  const sinceId = localstorage.getItem('lastId') || undefined;
+  const sinceId = localstorage.getItem("lastId") || undefined;
   console.log("sinceId: ", sinceId);
 
   const data = await twitterClient.searchRecent(keywords, sinceId, 100, 10);
@@ -31,17 +35,18 @@ export default async function searchHackathonTask() {
   if (data.length === 0) return;
 
   const lastId = data[0].id;
-  localstorage.setItem('lastId', lastId);
+  localstorage.setItem("lastId", lastId);
 
-  
-  const links = data.map(d => `https://twitter.com/${d.author_id}/status/${d.id}`);
+  const links = data.map(
+    (d) => `https://twitter.com/${d.author_id}/status/${d.id}`
+  );
 
-  const slackBlocks = links.map(link => ({
+  const slackBlocks = links.map((link) => ({
     type: "section",
     text: {
       type: "mrkdwn",
-      text: `<${link}|${link}>`
-    }
+      text: `<${link}|${link}>`,
+    },
   }));
 
   await slackServices.sendMessage(slackBlocks);
