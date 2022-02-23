@@ -1,10 +1,9 @@
-import TwitterClient from "../twitter";
-import { addListQueryWithOr } from "../utils";
-import * as slackServices from "../services/slack.service";
+import TwitterClient from "../common/lib/twitter";
+import { addListQueryWithOr } from "../common/utils";
+import * as slackServices from "../common/services/slack.service";
 import localstorage from "../common/localStorage";
 
-
-export async function searchHackathon() {
+export default async function searchHackathonTask() {
   const twitterClient = new TwitterClient();
 
   const blockchainKeywords = [

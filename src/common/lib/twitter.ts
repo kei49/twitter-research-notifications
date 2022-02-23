@@ -1,6 +1,38 @@
 import axios from "axios";
 
-import { baseConfig, twitterAPI } from "../config";
+import { baseConfig, twitterAPI } from "../../config";
+
+type TweetsCountData = {
+  data: {
+    end: string,
+    start: string,
+    tweet_count: number
+  }[],
+  meta: {
+    total_tweet_count: number
+  }
+}
+
+type TweetsSearchData = {
+  id: string,
+  author_id: string,
+  text: string,
+  public_metrics: {
+    retweet_count: number,
+    reply_count: number,
+    like_count: number,
+    quote_count: number
+  },
+  entities?: any
+}
+
+type SearchParams = {
+  'query': string,
+  'tweet.fields': any,
+  'since_id'?: string,
+  'max_results'?: number
+}
+
 
 export default class TwitterClient {
   private async get(path: string, params?: any) {
@@ -65,35 +97,4 @@ export default class TwitterClient {
 
     console.log("total tweet count: ", totalTweetCount);
   }
-}
-
-type TweetsCountData = {
-  data: {
-    end: string,
-    start: string,
-    tweet_count: number
-  }[],
-  meta: {
-    total_tweet_count: number
-  }
-}
-
-type TweetsSearchData = {
-  id: string,
-  author_id: string,
-  text: string,
-  public_metrics: {
-    retweet_count: number,
-    reply_count: number,
-    like_count: number,
-    quote_count: number
-  },
-  entities?: any
-}
-
-type SearchParams = {
-  'query': string,
-  'tweet.fields': any,
-  'since_id'?: string,
-  'max_results'?: number
 }

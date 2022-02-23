@@ -1,6 +1,6 @@
-import TwitterClient from "../twitter";
+import TwitterClient from "../common/lib/twitter";
 
-export async function countHackathon() {
+export default async function countHackathonTask() {
   const twitterClient = new TwitterClient();
 
   const countsTest = {
