@@ -32,14 +32,18 @@ export default class TwitterClient {
     return { data, totalTweetCount };
   }
 
-  async searchRecent(keywords: string, maxResults: number = 10, likeCountFilter: number = -1) {
+  async searchRecent(keywords: string, sinceId?: string, maxResults: number = 10, likeCountFilter: number = -1) {
     const params: SearchParams = {
       'query': `${keywords} has:links has:hashtags -is:retweet`,
-      'tweet.fields': 'author_id,public_metrics,text,entities'
+      'tweet.fields': 'author_id,public_metrics,text,entities',
     }
 
     if (maxResults) {
       params.max_results = maxResults;
+    }
+
+    if (sinceId) {
+      params.since_id = sinceId;
     }
 
     let data = await this.searchRecentAPI(params);
@@ -90,5 +94,6 @@ type TweetsSearchData = {
 type SearchParams = {
   'query': string,
   'tweet.fields': any,
+  'since_id'?: string,
   'max_results'?: number
 }

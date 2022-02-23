@@ -1,6 +1,8 @@
 import TwitterClient from "../twitter";
 import { addListQueryWithOr } from "../utils";
 import * as slackServices from "../services/slack.service";
+import localstorage from "../common/localStorage";
+
 
 export async function searchHackathon() {
   const twitterClient = new TwitterClient();
@@ -21,8 +23,18 @@ export async function searchHackathon() {
   const keywords = addListQueryWithOr(hackathonKeyword, blockchainKeywords, true);
   console.log(keywords);
 
-  const data = await twitterClient.searchRecent(keywords, 100, 10);
+  const sinceId = localstorage.getItem('lastId') || undefined;
+  console.log("sinceId: ", sinceId);
+
+  const data = await twitterClient.searchRecent(keywords, sinceId, 100, 10);
   console.log("Number of data: ", data.length);
+
+  if (data.length === 0) return;
+
+  const lastId = data[0].id;
+  localstorage.setItem('lastId', lastId);
+
+  
   const links = data.map(d => `https://twitter.com/${d.author_id}/status/${d.id}`);
 
   const slackBlocks = links.map(link => ({
