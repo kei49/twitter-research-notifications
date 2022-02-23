@@ -4,8 +4,16 @@ import { MessageAttachment, Block, KnownBlock } from '@slack/types';
 
 const url = process.env.SLACK_WEBHOOK_URL || "";
 
-export async function sendMessage(message: string | IncomingWebhookSendArguments) {
+export async function sendMessage(slackBlocks: SlackBlocks) {
   const webhook = new IncomingWebhook(url);
+
+  const message = {
+    username: 'Twitter Research Notifications',
+    text: '<@kei> Latest Search!',
+    icon_emoji: ':ghost:',
+    blocks: slackBlocks.slice(0, 49) // 50件までしかnotifyできない
+  }
+
   await webhook.send(message);
 }
 
@@ -20,9 +28,11 @@ export interface IncomingWebhookDefaultArguments {
   timeout?: number;
 }
 
+export type SlackBlocks = (KnownBlock | Block)[];
+
 export interface IncomingWebhookSendArguments extends IncomingWebhookDefaultArguments {
   attachments?: MessageAttachment[];
-  blocks?: (KnownBlock | Block)[];
+  blocks?: SlackBlocks;
   unfurl_links?: boolean;
   unfurl_media?: boolean;
 }

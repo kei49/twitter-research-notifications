@@ -1,5 +1,6 @@
 import TwitterClient from "../twitter";
 import { addListQueryWithOr } from "../utils";
+import * as slackServices from "../services/slack.service";
 
 export async function searchHackathon() {
   const twitterClient = new TwitterClient();
@@ -22,13 +23,15 @@ export async function searchHackathon() {
 
   const data = await twitterClient.searchRecent(keywords, 100, 10);
   console.log("Number of data: ", data.length);
+  const links = data.map(d => `https://twitter.com/${d.author_id}/status/${d.id}`);
 
-  data.map(d => {
-    const tweetLink = `https://twitter.com/${d.author_id}/status/${d.id}`;
-    const publicMetrics = d.public_metrics;
+  const slackBlocks = links.map(link => ({
+    type: "section",
+    text: {
+      type: "mrkdwn",
+      text: `<${link}|${link}>`
+    }
+  }));
 
-    console.log("LINK: ", tweetLink);
-    console.log("TEXT: ", d.text);
-    console.log(publicMetrics);
-  });
+  await slackServices.sendMessage(slackBlocks);
 }

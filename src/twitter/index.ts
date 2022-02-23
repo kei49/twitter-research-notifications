@@ -35,7 +35,7 @@ export default class TwitterClient {
   async searchRecent(keywords: string, maxResults: number = 10, likeCountFilter: number = -1) {
     const params: SearchParams = {
       'query': `${keywords} has:links has:hashtags -is:retweet`,
-      'tweet.fields': 'author_id,public_metrics,text'
+      'tweet.fields': 'author_id,public_metrics,text,entities'
     }
 
     if (maxResults) {
@@ -78,7 +78,13 @@ type TweetsSearchData = {
   id: string,
   author_id: string,
   text: string,
-  public_metrics: any
+  public_metrics: {
+    retweet_count: number,
+    reply_count: number,
+    like_count: number,
+    quote_count: number
+  },
+  entities?: any
 }
 
 type SearchParams = {
