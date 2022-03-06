@@ -9,7 +9,8 @@ export default async function startCron() {
     await searchHackathonTask();
   });
 
-  cron.schedule("20 * * * *", async () => {
+  cron.schedule("0 * * * *", async () => {
+    console.log("searchRussiaTask!");
     await searchRussiaTask();
   })
 }
