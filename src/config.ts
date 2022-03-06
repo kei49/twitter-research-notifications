@@ -11,3 +11,11 @@ export const twitterAPI = {
   searchRecentPath: "tweets/search/recent",
   countsRecent: "tweets/counts/recent",
 };
+
+export const taskIds = {
+  searchRussia: "searchRussia",
+  searchHackathon: "searchHackathon"
+} as const;
+
+export const taskIdsArray = Object.values(taskIds);
+export type TaskId = typeof taskIdsArray[number];

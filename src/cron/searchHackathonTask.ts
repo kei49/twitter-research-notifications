@@ -1,7 +1,8 @@
 import TwitterClient from "../common/lib/twitter";
 import { addListQueryWithOr } from "../common/utils";
 import * as slackServices from "../common/services/slack.service";
-import localstorage from "../common/localStorage";
+import { taskIds } from "../config";
+import TaskLocalStorage from "../common/localStorage";
 
 export default async function searchHackathonTask() {
   const twitterClient = new TwitterClient();
@@ -26,7 +27,9 @@ export default async function searchHackathonTask() {
   );
   console.log(keywords);
 
-  const sinceId = localstorage.getItem("lastId") || undefined;
+  const taskLocalStorage = new TaskLocalStorage(taskIds.searchHackathon);
+
+  const sinceId = taskLocalStorage.get("lastId") || undefined;
   console.log("sinceId: ", sinceId);
 
   const data = await twitterClient.searchRecent(keywords, sinceId, 100, 10);
@@ -35,7 +38,7 @@ export default async function searchHackathonTask() {
   if (data.length === 0) return;
 
   const lastId = data[0].id;
-  localstorage.setItem("lastId", lastId);
+  taskLocalStorage.set("lastId", lastId);
 
   const links = data.map(
     (d) => `https://twitter.com/${d.author_id}/status/${d.id}`

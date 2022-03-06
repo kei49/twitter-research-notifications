@@ -67,10 +67,13 @@ export default class TwitterClient {
     keywords: string,
     sinceId?: string,
     maxResults: number = 10,
-    likeCountFilter: number = -1
+    likeCountFilter: number = -1,
+    from?: string,
+    hasHashtags?: boolean
   ) {
+    const hashtags = hasHashtags ? "has:hashtags" : "";
     const params: SearchParams = {
-      query: `${keywords} has:links has:hashtags -is:retweet`,
+      query: `${keywords} ${from} has:links ${hashtags} -is:retweet`,
       "tweet.fields": "author_id,public_metrics,text,entities",
     };
 
