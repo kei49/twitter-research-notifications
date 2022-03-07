@@ -1,7 +1,7 @@
 import TwitterClient from "../common/lib/twitter";
 import { addListQueryWithOr } from "../common/utils";
 import * as slackServices from "../common/services/slack.service";
-import { taskIds } from "../config";
+import { slackWebhookUrls, taskIds } from "../config";
 import TaskLocalStorage from "../common/localStorage";
 
 export default async function searchHackathonTask() {
@@ -52,5 +52,7 @@ export default async function searchHackathonTask() {
     },
   }));
 
-  await slackServices.sendMessage(slackBlocks);
+  const webhookUrl = slackWebhookUrls.base;
+
+  await slackServices.sendMessage(webhookUrl, slackBlocks);
 }

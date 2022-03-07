@@ -2,9 +2,7 @@ import { Agent } from "http";
 import { IncomingWebhook } from "@slack/webhook";
 import { MessageAttachment, Block, KnownBlock } from "@slack/types";
 
-const url = process.env.SLACK_WEBHOOK_URL || "";
-
-export async function sendMessage(slackBlocks: SlackBlocks) {
+export async function sendMessage(url: string, slackBlocks: SlackBlocks) {
   const webhook = new IncomingWebhook(url);
 
   const message = {
