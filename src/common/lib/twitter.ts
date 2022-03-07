@@ -69,13 +69,21 @@ export default class TwitterClient {
     maxResults: number = 10,
     likeCountFilter: number = -1,
     from?: string,
-    hasHashtags?: boolean
+    hasHashtags?: boolean,
+    hasLinks?: boolean,
+    notReplay?: boolean,
+    notRetweet?: boolean
   ) {
     const hashtags = hasHashtags ? "has:hashtags" : "";
+    const links = hasLinks ? "has:links" : "";
+    const replay = notReplay ? "-is:replay" : "";
+    const retweet = notRetweet ? "-is:retweet" : "";
+
     const params: SearchParams = {
-      query: `${keywords} ${from} has:links ${hashtags} -is:retweet`,
+      query: `${keywords} ${from} ${links} ${hashtags} ${replay} ${retweet}`,
       "tweet.fields": "author_id,public_metrics,text,entities",
     };
+    console.log(params);
 
     if (maxResults) {
       params.max_results = maxResults;

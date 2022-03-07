@@ -14,7 +14,7 @@ export default async function pingFolloweeTweetsTask() {
   const keywords = ""
   const from = followeeQuery;
 
-  const data = await twitterClient.searchRecent(keywords, sinceId, 100, -1, from, false);
+  const data = await twitterClient.searchRecent(keywords, sinceId, 100, -1, from, false, false, true, true);
   console.log("Number of data: ", data.length);
 
   if (data.length === 0) return;
