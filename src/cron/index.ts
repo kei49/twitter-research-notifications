@@ -1,4 +1,5 @@
 import cron from "node-cron";
+import pingFolloweeTweetsTask from "./pingFolloweeTweetsTask";
 
 import searchHackathonTask from "./searchHackathonTask";
 import searchRussiaTask from "./searchRussiaTask";
@@ -10,7 +11,10 @@ export default async function startCron() {
   });
 
   cron.schedule("0 * * * *", async () => {
-    console.log("searchRussiaTask!");
     await searchRussiaTask();
+  });
+
+  cron.schedule("*/3 * * * *", async () => { // every 3 minutes
+    await pingFolloweeTweetsTask();
   })
 }
