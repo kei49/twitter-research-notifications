@@ -11,10 +11,20 @@ export default async function pingFolloweeTweetsTask() {
   const taskLocalStorage = new TaskLocalStorage(taskIds.pingFollowee);
   const sinceId = taskLocalStorage.get("lastId") || undefined;
 
-  const keywords = ""
+  const keywords = "";
   const from = followeeQuery;
 
-  const data = await twitterClient.searchRecent(keywords, sinceId, 100, -1, from, false, false, true, true);
+  const data = await twitterClient.searchRecent(
+    keywords,
+    sinceId,
+    100,
+    -1,
+    from,
+    false,
+    false,
+    true,
+    true
+  );
   console.log("Number of data: ", data.length);
 
   if (data.length === 0) return;

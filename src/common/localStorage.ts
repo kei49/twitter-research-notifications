@@ -18,5 +18,4 @@ export default class TaskLocalStorage {
   set(id: string, data: string) {
     this.localStorage.setItem(this.taskId + id, data);
   }
-
 }
