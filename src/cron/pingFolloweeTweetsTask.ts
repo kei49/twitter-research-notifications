@@ -9,7 +9,7 @@ import { followeeQuery, slackWebhookUrls, taskIds } from "../config";
 export default async function pingFolloweeTweetsTask() {
   const twitterClient = new TwitterClient();
   const taskLocalStorage = new TaskLocalStorage(taskIds.pingFollowee);
-  const sinceId = taskLocalStorage.get("lastId") || undefined;
+  const sinceId = taskLocalStorage.get("lastId");
 
   const keywords = "";
   const from = followeeQuery;

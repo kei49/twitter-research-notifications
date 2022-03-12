@@ -14,8 +14,8 @@ export default async function startCron() {
     await searchRussiaTask();
   });
 
-  cron.schedule("*/3 * * * *", async () => {
-    // every 3 minutes
+  cron.schedule("* * * * *", async () => {
+    // every minutes
     await pingFolloweeTweetsTask();
   });
 }

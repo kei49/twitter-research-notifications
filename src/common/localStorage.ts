@@ -11,8 +11,9 @@ export default class TaskLocalStorage {
     this.taskId = taskId;
   }
 
-  get(id: string) {
-    return this.localStorage.getItem(this.taskId + id);
+  get(id: string): string | undefined {
+    const data = this.localStorage.getItem(this.taskId + id);
+    return data ? data : undefined;
   }
 
   set(id: string, data: string) {

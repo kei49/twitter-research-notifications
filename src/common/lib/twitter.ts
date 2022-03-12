@@ -38,7 +38,7 @@ export default class TwitterClient {
     const url = twitterAPI.basePath + path;
     const headers = { authorization: `Bearer ${baseConfig.token}` };
 
-    console.log(url, headers);
+    console.log("requesting to ", url, headers, params);
 
     if (params) {
       return await axios.get(url, { params, headers });
@@ -48,7 +48,6 @@ export default class TwitterClient {
   }
 
   async searchRecentAPI(params: SearchParams) {
-    console.log("params: ", params);
     const res = await this.get(twitterAPI.searchRecentPath, params);
     const data: TweetsSearchData[] = res.data.data;
     return data;
@@ -71,19 +70,18 @@ export default class TwitterClient {
     from?: string,
     hasHashtags?: boolean,
     hasLinks?: boolean,
-    notReplay?: boolean,
+    notReply?: boolean,
     notRetweet?: boolean
   ) {
     const hashtags = hasHashtags ? "has:hashtags" : "";
     const links = hasLinks ? "has:links" : "";
-    const replay = notReplay ? "-is:replay" : "";
+    const reply = notReply ? "-is:reply" : "";
     const retweet = notRetweet ? "-is:retweet" : "";
 
     const params: SearchParams = {
-      query: `${keywords} ${from} ${links} ${hashtags} ${replay} ${retweet}`,
+      query: `${keywords} ${from} ${links} ${hashtags} ${reply} ${retweet}`,
       "tweet.fields": "author_id,public_metrics,text,entities",
     };
-    console.log(params);
 
     if (maxResults) {
       params.max_results = maxResults;
