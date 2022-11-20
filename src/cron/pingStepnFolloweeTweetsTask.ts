@@ -1,18 +1,18 @@
 import TwitterClient from "../common/lib/twitter";
 import * as slackServices from "../common/services/slack.service";
 import TaskLocalStorage from "../common/localStorage";
-import { generateFolloweeQuery, followeeList, slackWebhookUrls, taskIds } from "../config";
+import { generateFolloweeQuery, slackWebhookUrls, stepnFolloweeList, taskIds } from "../config";
 
 /**
- * Ping all the tweets from specified followee to Slack almost in realtime
+ * Ping all the tweets from specified STEPN followee to Slack almost in realtime
  */
-export default async function pingFolloweeTweetsTask() {
+export default async function pingStepnFolloweeTweetsTask() {
   const twitterClient = new TwitterClient();
-  const taskLocalStorage = new TaskLocalStorage(taskIds.pingFollowee);
+  const taskLocalStorage = new TaskLocalStorage(taskIds.pingStepnFollowee);
   const sinceId = taskLocalStorage.get("lastId");
 
   const keywords = "";
-  const from = generateFolloweeQuery(followeeList);
+  const from = generateFolloweeQuery(stepnFolloweeList);;
 
   const data = await twitterClient.searchRecent(
     keywords,
@@ -44,7 +44,14 @@ export default async function pingFolloweeTweetsTask() {
     },
   }));
 
-  const webhookUrl = slackWebhookUrls.followee;
+  const webhookUrl = slackWebhookUrls.stepnFollowee;
 
-  await slackServices.sendMessage(webhookUrl, slackBlocks);
+  const message: slackServices.Message = {
+    username: "STEPN Latest Info!",
+    text: "<@kei> You got important messages!!",
+    icon_emoji: ":ghost:",
+    blocks: slackBlocks.slice(0, 49), // 50件までしかnotifyできない
+  };
+
+  await slackServices.sendMessage(webhookUrl, undefined, message);
 }

@@ -41,7 +41,8 @@ export default class TwitterClient {
     console.log("requesting to ", url, headers, params);
 
     if (params) {
-      return await axios.get(url, { params, headers });
+      const res = await axios.get(url, { params, headers });
+      return res;
     }
 
     return await axios.get(url, { headers });
@@ -49,6 +50,8 @@ export default class TwitterClient {
 
   async searchRecentAPI(params: SearchParams) {
     const res = await this.get(twitterAPI.searchRecentPath, params);
+    console.log("@@@@ res", res);
+
     const data: TweetsSearchData[] = res.data.data;
     return data;
   }
@@ -67,19 +70,20 @@ export default class TwitterClient {
     sinceId?: string,
     maxResults: number = 10,
     likeCountFilter: number = -1,
-    from?: string,
+    theFrom?: string,
     hasHashtags?: boolean,
     hasLinks?: boolean,
     notReply?: boolean,
     notRetweet?: boolean
   ) {
+    const from = theFrom ? ` ${theFrom}` : ""
     const hashtags = hasHashtags ? "has:hashtags" : "";
-    const links = hasLinks ? "has:links" : "";
-    const reply = notReply ? "-is:reply" : "";
-    const retweet = notRetweet ? "-is:retweet" : "";
+    const links = hasLinks ? " has:links" : "";
+    const reply = notReply ? " -is:reply" : "";
+    const retweet = notRetweet ? " -is:retweet" : "";
 
     const params: SearchParams = {
-      query: `${keywords} ${from} ${links} ${hashtags} ${reply} ${retweet}`,
+      query: `${keywords}${from}${links}${hashtags}${reply}${retweet}`,
       "tweet.fields": "author_id,public_metrics,text,entities",
     };
 

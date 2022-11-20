@@ -8,22 +8,19 @@ import LineClient from "../common/lib/line";
  * Fetch latest tweets about ロシア from Reuters https://twitter.com/ReutersJapan
  * Notify them to Slack
  */
-export default async function searchRussiaTask() {
+export default async function subscribeStepnActivationCodesTask() {
   const twitterClient = new TwitterClient();
   const lineClient = new LineClient();
-  const taskLocalStorage = new TaskLocalStorage(taskIds.searchRussia);
+  const taskLocalStorage = new TaskLocalStorage(taskIds.stepnActivationCodes);
   const sinceId = taskLocalStorage.get("lastId") || undefined;
 
-  const keywords = "ロシア";
-  const from = "from:ReutersJapan";
+  const keywords = "STEPN activation code -follow -Follow -FOLLOW";
 
   const data = await twitterClient.searchRecent(
     keywords,
     sinceId,
     30,
-    -1,
-    from,
-    false
+    -1
   );
   console.log("Number of data: ", data.length);
 
@@ -44,7 +41,7 @@ export default async function searchRussiaTask() {
     },
   }));
 
-  const webhookUrl = slackWebhookUrls.reutersRussia;
+  const webhookUrl = slackWebhookUrls.base;
 
   await slackServices.sendMessage(webhookUrl, slackBlocks);
 

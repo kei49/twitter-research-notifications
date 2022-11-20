@@ -5,17 +5,18 @@ import { slackWebhookUrls, taskIds } from "../config";
 import LineClient from "../common/lib/line";
 
 /**
- * Fetch latest tweets about ロシア from Reuters https://twitter.com/ReutersJapan
+ * Fetch latest tweets from Bloomberg https://twitter.com/business
  * Notify them to Slack
  */
-export default async function searchRussiaTask() {
+export default async function subscribeBloombergTask() {
   const twitterClient = new TwitterClient();
   const lineClient = new LineClient();
-  const taskLocalStorage = new TaskLocalStorage(taskIds.searchRussia);
+  const taskLocalStorage = new TaskLocalStorage(taskIds.subscribeBloomberg);
+
   const sinceId = taskLocalStorage.get("lastId") || undefined;
 
-  const keywords = "ロシア";
-  const from = "from:ReutersJapan";
+  const keywords = "(Nasdaq OR Bitcoin OR China OR Japan OR BOJ)";
+  const from = "from:business";
 
   const data = await twitterClient.searchRecent(
     keywords,
@@ -23,7 +24,10 @@ export default async function searchRussiaTask() {
     30,
     -1,
     from,
-    false
+    false,
+    undefined,
+    true,
+    true
   );
   console.log("Number of data: ", data.length);
 
@@ -44,7 +48,7 @@ export default async function searchRussiaTask() {
     },
   }));
 
-  const webhookUrl = slackWebhookUrls.reutersRussia;
+  const webhookUrl = slackWebhookUrls.finance;
 
   await slackServices.sendMessage(webhookUrl, slackBlocks);
 

@@ -23,22 +23,38 @@ export const taskIds = {
   searchRussia: "searchRussia",
   searchHackathon: "searchHackathon",
   pingFollowee: "pingFollowee",
+  pingStepnFollowee: "pingStepnFollowee",
+  stepnActivationCodes: "stepnActivationCodes",
+  searchFinanceKeywords: "searchFinanceKeywords",
+  subscribeBloomberg: "subscribeBloomberg",
+  subscribeBloombergJP: "subscribeBloombergJP",
+  subscribebloombergCrypto: "subscribebloombergCrypto",
+  subscribeFinance: "subscribeFinance",
 } as const;
 
 export const slackWebhookUrls = {
   base: process.env.SLACK_WEBHOOK_URL || "",
+  reutersRussia: process.env.SLACK_WEBHOOK_REUTERS_RUSSIA_URL || "",
   followee: process.env.SLACK_WEBHOOK_FOLLOWEE_URL || "",
+  stepnFollowee: process.env.SLACK_WEBHOOK_STEPN_FOLLOWEE_URL || "",
+  finance: process.env.SLACK_WEBHOOK_FINANCE_URL || "",
+  crypto: process.env.SLACK_WEBHOOK_CRYPTO_URL || "",
 };
 
-const followeeList = process.env.PING_FOLLOWEE_LIST?.split(",") || [];
+const getListFromString = (str?: string) => str?.split(",") || [];
 
-const generateQuery = (acc: string, cur: string, isLast: boolean) =>
+export const followeeList = getListFromString(process.env.PING_FOLLOWEE_LIST)
+
+export const stepnFolloweeList = getListFromString(process.env.STEPN_PING_FOLLOWEE_LIST)
+
+
+const generateQueryReduceHelper = (acc: string, cur: string, isLast: boolean) =>
   isLast ? acc + "from:" + cur + ") " : acc + "from:" + cur + " OR ";
 
-export const followeeQuery =
-  followeeList.length > 0
-    ? followeeList.reduce(
-        (acc, cur, i) => generateQuery(acc, cur, followeeList.length === i + 1),
+export const generateFolloweeQuery = (fList: string[]) =>
+  fList.length > 0
+    ? fList.reduce(
+        (acc, cur, i) => generateQueryReduceHelper(acc, cur, fList.length === i + 1),
         "("
       )
     : "";

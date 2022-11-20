@@ -8,22 +8,29 @@ import LineClient from "../common/lib/line";
  * Fetch latest tweets about ロシア from Reuters https://twitter.com/ReutersJapan
  * Notify them to Slack
  */
-export default async function searchRussiaTask() {
+export default async function searchFinanceKeywordsTask() {
   const twitterClient = new TwitterClient();
   const lineClient = new LineClient();
-  const taskLocalStorage = new TaskLocalStorage(taskIds.searchRussia);
+  const taskLocalStorage = new TaskLocalStorage(taskIds.searchFinanceKeywords);
+
+  const tryReset = true;
+  tryReset && taskLocalStorage.set("lastId", "");
+
   const sinceId = taskLocalStorage.get("lastId") || undefined;
 
-  const keywords = "ロシア";
-  const from = "from:ReutersJapan";
+  const keywords = "(円安 OR 金利 OR BOJ)"; // "円安" "金利" "us bond yields" "BOJ"
+  const from = "";
 
   const data = await twitterClient.searchRecent(
     keywords,
     sinceId,
     30,
-    -1,
-    from,
-    false
+    30,
+    undefined,
+    undefined,
+    undefined,
+    true,
+    true
   );
   console.log("Number of data: ", data.length);
 
@@ -44,7 +51,7 @@ export default async function searchRussiaTask() {
     },
   }));
 
-  const webhookUrl = slackWebhookUrls.reutersRussia;
+  const webhookUrl = slackWebhookUrls.finance;
 
   await slackServices.sendMessage(webhookUrl, slackBlocks);
 
