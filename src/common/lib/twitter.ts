@@ -50,7 +50,7 @@ export default class TwitterClient {
 
   async searchRecentAPI(params: SearchParams) {
     const res = await this.get(twitterAPI.searchRecentPath, params);
-    console.log("@@@@ res", res);
+    // console.log("@@@@ res", res);
 
     const data: TweetsSearchData[] = res.data.data;
     return data;

@@ -23,14 +23,14 @@ export default async function startCron() {
     await searchHackathonTask();
   });
 
-  !disable && cron.schedule("0 * * * *", async () => {
-    await searchRussiaTask();
+  cron.schedule("0 8,9,12,15,18,21 * * *", async () => {
+    await subscribeBloombergJPTask();
+    await subscribeBloombergTask();
+    await searchFinanceKeywordsTask();
   });
 
-  cron.schedule("*/30 * * * *", async () => {
-    await searchFinanceKeywordsTask();
-    await subscribeBloombergTask();
-    await subscribeBloombergJPTask();
+  !disable && cron.schedule("0 * * * *", async () => {
+    await searchRussiaTask();
   });
 
   !disable && cron.schedule("* * * * *", async () => {
@@ -41,28 +41,19 @@ export default async function startCron() {
    * Subscribe from specific accounts
    */
 
-  !disable && cron.schedule("*/20 * * * * *", async () => {
-    console.log("This is a test cron calling every 20 seconds");
+  cron.schedule("*/10 * * * *", async () => {
+    // every 10 minutes
+    await pingFolloweeTweetsTask();
+  });
+
+  cron.schedule("5 * * * *", async () => {
+    // at 5 minutes every hour
+    // await subscribeFinanceTask();
+    await subscribeBloombergCryptoTask();
   });
 
   !disable && cron.schedule("* * * * *", async () => {
     // every minutes
     await pingStepnFolloweeTweetsTask();
-  });
-
-  cron.schedule("5 * * * *", async () => {
-    // at 5 minutes every hour
-    await subscribeFinanceTask();
-    await subscribeBloombergCryptoTask();
-  });
-
-  cron.schedule("30 5 * * * *", async () => {
-    // at 5 minutes every hour
-    await subscribeBloombergJPTask();
-  });
- 
-  cron.schedule("*/10 * * * *", async () => {
-    // every 10 minutes
-    await pingFolloweeTweetsTask();
-  });
+  });  
 }

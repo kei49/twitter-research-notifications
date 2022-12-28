@@ -3,9 +3,10 @@ import * as slackServices from "../common/services/slack.service";
 import TaskLocalStorage from "../common/localStorage";
 import { slackWebhookUrls, taskIds } from "../config";
 import LineClient from "../common/lib/line";
+import { getSlackMessageWithBlocks } from "../common/utils";
 
 /**
- * Fetch latest tweets about ロシア from Reuters https://twitter.com/ReutersJapan
+ * Fetch latest tweets about finance
  * Notify them to Slack
  */
 export default async function searchFinanceKeywordsTask() {
@@ -39,21 +40,8 @@ export default async function searchFinanceKeywordsTask() {
   const lastId = data[0].id;
   taskLocalStorage.set("lastId", lastId);
 
-  const links = data.map(
-    (d) => `https://twitter.com/${d.author_id}/status/${d.id}`
-  );
-
-  const slackBlocks = links.map((link) => ({
-    type: "section",
-    text: {
-      type: "mrkdwn",
-      text: `<${link}|${link}>`,
-    },
-  }));
-
   const webhookUrl = slackWebhookUrls.finance;
+  const message = getSlackMessageWithBlocks("円に関するキーワード", "You got finance messages about 円安 OR 金利 OR BOJ", data);
 
-  await slackServices.sendMessage(webhookUrl, slackBlocks);
-
-  await lineClient.pushMessage(links);
+  await slackServices.sendMessage(webhookUrl, undefined, message);
 }
