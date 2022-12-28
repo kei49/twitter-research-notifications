@@ -2,6 +2,7 @@ import TwitterClient from "../common/lib/twitter";
 import * as slackServices from "../common/services/slack.service";
 import TaskLocalStorage from "../common/localStorage";
 import { slackWebhookUrls, taskIds } from "../config";
+import { getSlackMessageWithBlocks } from "../common/utils";
 
 /**
  * Fetch latest tweets from BloombergJapan https://twitter.com/BloombergJapan
@@ -36,26 +37,8 @@ export default async function subscribeBloombergJPTask() {
   const lastId = data[0].id;
   taskLocalStorage.set("lastId", lastId);
 
-  const links = data.map(
-    (d) => `https://twitter.com/${d.author_id}/status/${d.id}`
-  );
-
-  const slackBlocks = links.map((link) => ({
-    type: "section",
-    text: {
-      type: "mrkdwn",
-      text: `<${link}|${link}>`,
-    },
-  }));
-
   const webhookUrl = slackWebhookUrls.finance;
-
-  const message: slackServices.Message = {
-    username: "ブルームバーグニュース!",
-    text: "<@kei> You got finance messages from BloombergJapan",
-    icon_emoji: ":ghost:",
-    blocks: slackBlocks.slice(0, 49), // 50件までしかnotifyできない
-  };
+  const message = getSlackMessageWithBlocks("ブルームバーグニュース!", "You got finance messages from BloombergJapan", data);
 
   await slackServices.sendMessage(webhookUrl, undefined, message);
 }

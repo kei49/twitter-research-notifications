@@ -13,7 +13,7 @@ type TweetsCountData = {
   };
 };
 
-type TweetsSearchData = {
+export type TweetsSearchData = {
   id: string;
   author_id: string;
   text: string;

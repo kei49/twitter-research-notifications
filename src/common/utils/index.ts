@@ -1,3 +1,6 @@
+import { TweetsSearchData } from "../../common/lib/twitter";
+import * as slackServices from "../../common/services/slack.service";
+
 /**
  * isAnd is used for connection between base and li, not used for connection between li elements
  */
@@ -16,4 +19,30 @@ export function addListQueryWithOr(base: string, li: string[], isAnd: boolean) {
     }
   }
   return query;
+}
+
+export function getSlackMessageWithBlocks(username: string, text: string, data: TweetsSearchData[]) {
+  const message: slackServices.Message = {
+    username,
+    text,
+    icon_emoji: ":ghost:",
+    blocks: getTwitterMessagesForSlack(data).slice(0, 49), // 50件までしかnotifyできない
+  };
+  return message
+}
+
+
+export function getTwitterMessagesForSlack(data: TweetsSearchData[]) {
+  const getTwitterLink = (id: string, author_id: string) => `https://twitter.com/${author_id}/status/${id}`;
+  const removeHttps = (text: string) => text.split("https")[0];
+
+  const slackBlocks = data.map((d) => ({
+    type: "section",
+    text: {
+      type: "mrkdwn",
+      text: `<${getTwitterLink(d.id, d.author_id)}|${removeHttps(d.text)}>`,
+    },
+  }));
+
+  return slackBlocks;
 }

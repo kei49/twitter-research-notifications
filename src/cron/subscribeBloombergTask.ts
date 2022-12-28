@@ -3,6 +3,7 @@ import * as slackServices from "../common/services/slack.service";
 import TaskLocalStorage from "../common/localStorage";
 import { slackWebhookUrls, taskIds } from "../config";
 import LineClient from "../common/lib/line";
+import { getSlackMessageWithBlocks } from "../common/utils";
 
 /**
  * Fetch latest tweets from Bloomberg https://twitter.com/business
@@ -36,21 +37,8 @@ export default async function subscribeBloombergTask() {
   const lastId = data[0].id;
   taskLocalStorage.set("lastId", lastId);
 
-  const links = data.map(
-    (d) => `https://twitter.com/${d.author_id}/status/${d.id}`
-  );
-
-  const slackBlocks = links.map((link) => ({
-    type: "section",
-    text: {
-      type: "mrkdwn",
-      text: `<${link}|${link}>`,
-    },
-  }));
-
   const webhookUrl = slackWebhookUrls.finance;
+  const message = getSlackMessageWithBlocks("Bloomberg!", "You got finance messages from Bloomberg", data);
 
-  await slackServices.sendMessage(webhookUrl, slackBlocks);
-
-  await lineClient.pushMessage(links);
+  await slackServices.sendMessage(webhookUrl, undefined, message);
 }
