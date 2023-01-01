@@ -10,7 +10,8 @@ import subscribeBloombergTask from "./subscribeBloombergTask";
 import subscribeFinanceTask from "./subscribeFinanceTask";
 import subscribeBloombergJPTask from "./subscribeBloombergJPTask";
 import subscribeStepnActivationCodesTask from "./subscribeStepnActivationCodesTask";
-// import countHackathonTask from "./countHackathonTask";
+import countInterestRateTask from "./countInterestRateTask";
+
 
 export default async function startCron() {
   const disable = true;
@@ -55,5 +56,13 @@ export default async function startCron() {
   !disable && cron.schedule("* * * * *", async () => {
     // every minutes
     await pingStepnFolloweeTweetsTask();
-  });  
+  }); 
+  
+  /**
+   * Counter summary
+   */
+  
+  cron.schedule("0 7,15,23 * * *", async () => {
+    await countInterestRateTask();
+  });
 }

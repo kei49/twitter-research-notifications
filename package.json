@@ -29,6 +29,8 @@
     "date-fns-tz": "^1.2.2",
     "dotenv": "^14.2.0",
     "express": "^4.17.2",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.40",
     "node-cron": "^3.0.0",
     "node-localstorage": "^2.2.1",
     "nodemon": "^2.0.15",

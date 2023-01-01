@@ -1,3 +1,5 @@
+import moment from "moment-timezone";
+
 import { TweetsSearchData } from "../../common/lib/twitter";
 import * as slackServices from "../../common/services/slack.service";
 
@@ -45,4 +47,8 @@ export function getTwitterMessagesForSlack(data: TweetsSearchData[]) {
   }));
 
   return slackBlocks;
+}
+
+export const convertTimeInJST = (d: string) => {
+  return moment(d).tz('Asia/Tokyo').format("YYYYMMDD-hhmm").toString();
 }

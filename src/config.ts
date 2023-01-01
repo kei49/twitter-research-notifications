@@ -38,6 +38,7 @@ export const slackWebhookUrls = {
   followee: process.env.SLACK_WEBHOOK_FOLLOWEE_URL || "",
   stepnFollowee: process.env.SLACK_WEBHOOK_STEPN_FOLLOWEE_URL || "",
   finance: process.env.SLACK_WEBHOOK_FINANCE_URL || "",
+  financeCounter: process.env.SLACK_WEBHOOK_COUNTER_FINANCE_URL || "",
   crypto: process.env.SLACK_WEBHOOK_CRYPTO_URL || "",
 };
 

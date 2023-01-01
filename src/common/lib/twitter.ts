@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { baseConfig, twitterAPI } from "../../config";
+import { convertTimeInJST } from "../utils";
 
 type TweetsCountData = {
   data: {
@@ -32,6 +33,11 @@ type SearchParams = {
   since_id?: string;
   max_results?: number;
 };
+
+type CountSearchParams = {
+  query: string;
+  granularity: string;
+}
 
 export default class TwitterClient {
   private async get(path: string, params?: any) {
@@ -104,14 +110,15 @@ export default class TwitterClient {
     return data;
   }
 
-  async countsRecent(params: any) {
+  async countsRecent(params: CountSearchParams) {
     const { data, totalTweetCount } = await this.countsRecentAPI(params);
 
-    console.log("block of counts: ", data.length);
-    console.log(data[0], data[data.length - 1]);
+    // console.log("block of counts: ", data.length);
+    // console.log(data[0], data[data.length - 1]);
+    // console.log("total tweet count: ", totalTweetCount);
+    const results = data.slice(-9).map((d) => `${d.tweet_count} counts by '${params.query}' query until ${convertTimeInJST(d.end)}`);
 
-    data.map((d) => console.log(`count until ${d.end}: ${d.tweet_count}`));
-
-    console.log("total tweet count: ", totalTweetCount);
+    console.log("results", results);
+    return results
   }
 }

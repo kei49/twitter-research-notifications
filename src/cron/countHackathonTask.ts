@@ -13,5 +13,10 @@ export default async function countHackathonTask() {
     granularity: "day",
   };
 
-  await twitterClient.countsRecent(countsTest2);
+  const countsTest3 = {
+    query: "interest rate",
+    granularity: "hour"
+  }
+
+  await twitterClient.countsRecent(countsTest3);
 }
