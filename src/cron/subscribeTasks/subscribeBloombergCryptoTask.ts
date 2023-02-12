@@ -16,9 +16,8 @@ export async function subscribeBloombergCryptoTask() {
 
   if (!data) return;
 
-  await interactor.sendResultsToSlack({
-    username: "Crypto Latest Info!",
-    text: `<@kei> You got messages from bloomberg crypto!!`,
+  await interactor.postResultsToSlack({
     data,
+    firstMessage: `<@kei> You got messages from bloomberg crypto!!`,
   });
 }

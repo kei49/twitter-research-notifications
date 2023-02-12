@@ -1,22 +1,26 @@
 import TwitterClient, { TweetsSearchData } from "../common/lib/twitter";
+import * as slackServices from "../common/services/slack.service";
 import TaskLocalStorage from "../common/localStorage";
-import { TaskId } from "../config";
-import { getChunkedTwitterMessages } from "../common/utils";
-import { PostSlackInput, TwitterSearchInput } from "../common/types";
+import { slackWebhookUrls, TaskId, taskIds } from "../config";
+import { getSlackMessageWithBlocks } from "../common/utils";
+import {
+  SlackMessageInput,
+  SlackPostInput,
+  TwitterSearchInput,
+} from "../common/types";
 import { SlackProvider } from "../common/provider/slack.provider";
-import _ from "lodash";
 
-export default class TwitterSearchToSlackUsecase {
+export default class DeprecatedTwitterSearchToSlackUsecase {
   private twitterClient: TwitterClient;
   private taskLocalStorage: TaskLocalStorage;
   private sinceId: string | undefined;
-  private slackProvider: SlackProvider;
+  private webhookUrl: string;
 
-  constructor(taskId: TaskId, channel: string) {
+  constructor(taskId: TaskId, slackWebhookUrl: string) {
     this.twitterClient = new TwitterClient();
     this.taskLocalStorage = new TaskLocalStorage(taskId);
     this.sinceId = this.taskLocalStorage.get("lastId") || undefined;
-    this.slackProvider = new SlackProvider(channel);
+    this.webhookUrl = slackWebhookUrl;
   }
 
   async searchByQuery({
@@ -40,20 +44,8 @@ export default class TwitterSearchToSlackUsecase {
     return data;
   }
 
-  async postResultsToSlack({
-    data,
-    firstMessage,
-    chunkSize = 10,
-  }: PostSlackInput) {
-    const res = await this.slackProvider.postMessage(firstMessage);
-    const thread_ts = res["ts"];
-
-    const chunkedMessages = getChunkedTwitterMessages(data, chunkSize);
-
-    chunkedMessages.forEach(async (messages) => {
-      const text = messages.join("\n");
-
-      await this.slackProvider.postMessage(text, thread_ts);
-    });
+  async sendResultsToSlack({ username, text, data }: SlackMessageInput) {
+    const message = getSlackMessageWithBlocks({ username, text, data });
+    await slackServices.sendMessage(this.webhookUrl, undefined, message);
   }
 }

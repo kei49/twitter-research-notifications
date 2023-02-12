@@ -20,9 +20,8 @@ export async function subscribeBloombergJPTask() {
 
   if (!data) return;
 
-  await interactor.sendResultsToSlack({
-    username: "ブルームバーグニュース!",
-    text: `<@kei> You got finance messages from BloombergJapan!`,
+  await interactor.postResultsToSlack({
     data,
+    firstMessage: `<@kei> You got finance messages from BloombergJapan!`,
   });
 }

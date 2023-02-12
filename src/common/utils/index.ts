@@ -1,3 +1,4 @@
+import _ from "lodash";
 import moment from "moment-timezone";
 
 import { TweetsSearchData } from "../../common/lib/twitter";
@@ -39,9 +40,10 @@ export function getSlackMessageWithBlocks({
   return message;
 }
 
+const getTwitterLink = (id: string, author_id: string) =>
+  `https://twitter.com/${author_id}/status/${id}`;
+
 export function getTwitterMessagesForSlack(data: TweetsSearchData[]) {
-  const getTwitterLink = (id: string, author_id: string) =>
-    `https://twitter.com/${author_id}/status/${id}`;
   const removeHttps = (text: string) => text.split("https")[0];
 
   const slackBlocks = data.map((d) => ({
@@ -53,6 +55,17 @@ export function getTwitterMessagesForSlack(data: TweetsSearchData[]) {
   }));
 
   return slackBlocks;
+}
+
+export function getChunkedTwitterMessages(
+  data: TweetsSearchData[],
+  chunkSize: number = 10
+) {
+  // Use Twitter app on Slack to display review for each link rather than formatting here
+  return _.chunk(
+    data.map((d) => `${getTwitterLink(d.id, d.author_id)}`),
+    chunkSize
+  );
 }
 
 export const convertTimeInJST = (d: string) => {

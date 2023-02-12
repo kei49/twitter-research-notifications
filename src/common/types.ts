@@ -7,6 +7,12 @@ export interface SlackMessageInput {
   data: TweetsSearchData[];
 }
 
+export interface SlackPostInput {
+  channel: string;
+  text: string;
+  data: TweetsSearchData[];
+}
+
 export interface BuildQuqeryData {
   keywords: string;
   theFrom?: string;
@@ -23,4 +29,10 @@ export interface TwitterSearchInput extends BuildQuqeryData {
 
 export interface TwitterCountSearchInput extends BuildQuqeryData {
   granularity: string;
+}
+
+export interface PostSlackInput {
+  data: TweetsSearchData[];
+  firstMessage: string;
+  chunkSize?: number;
 }

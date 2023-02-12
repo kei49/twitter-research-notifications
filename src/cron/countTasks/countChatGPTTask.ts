@@ -9,6 +9,6 @@ export async function countChatGPTTask() {
     hasLinks: true,
     notReply: true,
     notRetweet: true,
-    granularity: "day"
+    granularity: "day",
   });
 }

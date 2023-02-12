@@ -21,9 +21,8 @@ export async function searchRussiaTask() {
 
   if (!data) return;
 
-  await interactor.sendResultsToSlack({
-    username: "ReutersJapan!",
-    text: `About Russia: `,
+  await interactor.postResultsToSlack({
     data,
+    firstMessage: `About Russia: `,
   });
 }

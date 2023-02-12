@@ -12,13 +12,13 @@ export default class TwitterCountSearchToSlackUsecase {
   }
 
   async searchByQuery({
-    granularity = 'week',
+    granularity = "week",
     ...queryInput
   }: TwitterCountSearchInput) {
     const query = this.twitterClient.buildQuery(queryInput);
     const params = this.twitterClient.buildCountSearchParams(
       query,
-      granularity,
+      granularity
     );
     const results = await this.twitterClient.countRecent(params);
   }

@@ -41,9 +41,8 @@ export async function searchHackathonTask() {
 
   if (!data) return;
 
-  await interactor.sendResultsToSlack({
-    username: "Hackathon News!",
-    text: `Tweets about Hackathon with more than ${likeCountFilter} likes: `,
+  await interactor.postResultsToSlack({
     data,
+    firstMessage: `Tweets about Hackathon with more than ${likeCountFilter} likes: `,
   });
 }

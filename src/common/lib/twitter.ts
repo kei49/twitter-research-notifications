@@ -96,7 +96,7 @@ export default class TwitterClient {
       );
 
       return data.data;
-      
+
       if (meta.next_token) {
         return [
           ...data.data,

@@ -5,7 +5,7 @@ import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUseca
 export async function searchChatGPTTask() {
   const interactor = new TwitterSearchToSlackUsecase(
     taskIds.searchChatGPT,
-    slackWebhookUrls.chatGPT
+    "twitter-chatgpt"
   );
 
   const likeCountFilter = -1;
@@ -21,9 +21,8 @@ export async function searchChatGPTTask() {
 
   if (!data) return;
 
-  await interactor.sendResultsToSlack({
-    username: "ChatGPT Screener!",
-    text: `Trending tweets (more than ${likeCountFilter} likes) about ChatGPT: `,
+  await interactor.postResultsToSlack({
     data,
+    firstMessage: `${data.length} trending tweets (more than ${likeCountFilter} likes) about ChatGPT: `,
   });
 }

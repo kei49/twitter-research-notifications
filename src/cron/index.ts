@@ -9,14 +9,13 @@ import {
 import {
   searchChatGPTTask,
   searchHackathonTask,
-  searchRussiaTask
+  searchRussiaTask,
 } from "./searchKeywordsTasks";
 import {
   countChatGPTTask,
   countInterestRateTask,
-  countHackathonTask
+  countHackathonTask,
 } from "./countTasks";
-
 
 export default async function startCron() {
   const disable = true;
@@ -52,7 +51,6 @@ export default async function startCron() {
   cron.schedule("0 14 * * *", async () => {
     await searchRussiaTask();
   });
-
 
   /**
    * Counter summary
