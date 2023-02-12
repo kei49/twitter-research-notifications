@@ -24,7 +24,7 @@ export default async function startCron() {
    * TESTING
    */
 
-  cron.schedule("0 10 * * *", async () => {
+  cron.schedule("0 * * * *", async () => {
     await countChatGPTTask();
   });
 
@@ -45,7 +45,7 @@ export default async function startCron() {
   /**
    * Search with keywords
    */
-  cron.schedule("* * * * *", async () => {
+  cron.schedule("0 * * * *", async () => {
     await searchChatGPTTask();
   });
   cron.schedule("0 14 * * *", async () => {

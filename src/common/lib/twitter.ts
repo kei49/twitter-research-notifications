@@ -33,6 +33,7 @@ type SearchParams = {
   "tweet.fields": any;
   since_id?: string;
   max_results?: number;
+  start_time?: Date;
   next_token?: string;
 };
 
@@ -95,8 +96,6 @@ export default class TwitterClient {
         `@@@@ got the ${data.data.length} data with next_token: ${meta.next_token}`
       );
 
-      return data.data;
-
       if (meta.next_token) {
         return [
           ...data.data,
@@ -143,19 +142,22 @@ export default class TwitterClient {
     hasLinks,
     notReply,
     notRetweet,
+    lang,
   }: BuildQuqeryData) {
     const from = theFrom ? ` ${theFrom}` : "";
     const hashtags = hasHashtags ? "has:hashtags" : "";
     const links = hasLinks ? " has:links" : "";
     const reply = notReply ? " -is:reply" : "";
     const retweet = notRetweet ? " -is:retweet" : "";
-    const query = `${keywords}${from}${links}${hashtags}${reply}${retweet}`;
+    const withLang = lang ? ` lang:${lang}` : "";
+    const query = `${keywords}${from}${links}${hashtags}${reply}${retweet}${withLang}`;
     return query;
   }
 
   buildSearchParams(
     query: string,
     maxResults: number = 10,
+    start_time?: Date,
     sinceId?: string
   ): SearchParams {
     const params: SearchParams = {
@@ -165,6 +167,10 @@ export default class TwitterClient {
 
     if (maxResults) {
       params.max_results = maxResults;
+    }
+
+    if (start_time) {
+      params.start_time = start_time;
     }
 
     if (sinceId) {

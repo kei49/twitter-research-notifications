@@ -22,12 +22,14 @@ export default class TwitterSearchToSlackUsecase {
   async searchByQuery({
     maxResults = 30,
     likeCountFilter = -1,
+    start_time,
     ...queryInput
   }: TwitterSearchInput) {
     const query = this.twitterClient.buildQuery(queryInput);
     const params = this.twitterClient.buildSearchParams(
       query,
       maxResults,
+      start_time,
       this.sinceId
     );
     const data = await this.twitterClient.searchRecent(params, likeCountFilter);
@@ -43,7 +45,7 @@ export default class TwitterSearchToSlackUsecase {
   async postResultsToSlack({
     data,
     firstMessage,
-    chunkSize = 10,
+    chunkSize = 5,
   }: PostSlackInput) {
     const res = await this.slackProvider.postMessage(firstMessage);
     const thread_ts = res["ts"];

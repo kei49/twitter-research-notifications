@@ -20,10 +20,12 @@ export interface BuildQuqeryData {
   hasLinks?: boolean;
   notReply?: boolean;
   notRetweet?: boolean;
+  lang?: string;
 }
 
 export interface TwitterSearchInput extends BuildQuqeryData {
   maxResults?: number;
+  start_time?: Date;
   likeCountFilter?: number;
 }
 
