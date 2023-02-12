@@ -30,9 +30,9 @@ export default async function subscribeBloombergJPTask() {
     true,
     true
   );
-  console.log("Number of data: ", data.length);
+  if (!data || data.length === 0) return;
 
-  if (data.length === 0) return;
+  console.log("Number of data: ", data.length);
 
   const lastId = data[0].id;
   taskLocalStorage.set("lastId", lastId);

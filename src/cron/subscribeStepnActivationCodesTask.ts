@@ -22,9 +22,9 @@ export default async function subscribeStepnActivationCodesTask() {
     30,
     -1
   );
-  console.log("Number of data: ", data.length);
+  if (!data || data.length === 0) return;
 
-  if (data.length === 0) return;
+  console.log("Number of data: ", data.length);
 
   const lastId = data[0].id;
   taskLocalStorage.set("lastId", lastId);

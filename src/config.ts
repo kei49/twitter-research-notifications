@@ -30,6 +30,7 @@ export const taskIds = {
   subscribeBloombergJP: "subscribeBloombergJP",
   subscribebloombergCrypto: "subscribebloombergCrypto",
   subscribeFinance: "subscribeFinance",
+  searchChatGPT: "searchChatGPT"
 } as const;
 
 export const slackWebhookUrls = {
@@ -40,6 +41,7 @@ export const slackWebhookUrls = {
   finance: process.env.SLACK_WEBHOOK_FINANCE_URL || "",
   financeCounter: process.env.SLACK_WEBHOOK_COUNTER_FINANCE_URL || "",
   crypto: process.env.SLACK_WEBHOOK_CRYPTO_URL || "",
+  chatGPT: process.env.SLACK_WEBHOOK_CHATGPT_URL || "",
 };
 
 const getListFromString = (str?: string) => str?.split(",") || [];

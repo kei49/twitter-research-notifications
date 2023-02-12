@@ -33,9 +33,9 @@ export default async function searchHackathonTask() {
   console.log("sinceId: ", sinceId);
 
   const data = await twitterClient.searchRecent(keywords, sinceId, 100, 10);
-  console.log("Number of data: ", data.length);
+  if (!data || data.length === 0) return;
 
-  if (data.length === 0) return;
+  console.log("Number of data: ", data.length);
 
   const lastId = data[0].id;
   taskLocalStorage.set("lastId", lastId);

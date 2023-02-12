@@ -32,6 +32,7 @@ type SearchParams = {
   "tweet.fields": any;
   since_id?: string;
   max_results?: number;
+  next_token?: string;
 };
 
 type CountSearchParams = {
@@ -54,12 +55,22 @@ export default class TwitterClient {
     return await axios.get(url, { headers });
   }
 
-  async searchRecentAPI(params: SearchParams) {
-    const res = await this.get(twitterAPI.searchRecentPath, params);
-    // console.log("@@@@ res", res);
+  async searchRecentAPI(params: SearchParams, next_token?: string): Promise<TweetsSearchData[] | undefined> {
+    try {
+      const res = await this.get(twitterAPI.searchRecentPath, next_token ? { ...params, next_token } : params);
+      const data = res.data;
+      const meta = data.meta;
 
-    const data: TweetsSearchData[] = res.data.data;
-    return data;
+      console.log(`@@@@ got the ${data.data.length} data with next_token: ${meta.next_token}`)
+      if (meta.next_token) {
+        return [...data.data, ...(await this.searchRecentAPI(params, meta.next_token) as TweetsSearchData[])];
+      } else {
+        return data.data;
+      }
+
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   async countsRecentAPI(params: any) {
@@ -103,8 +114,14 @@ export default class TwitterClient {
 
     let data = await this.searchRecentAPI(params);
 
+    if (!data) return;
+
+    console.log(`Original Twitter search API results count: ${data.length}`);
+
     if (likeCountFilter !== -1) {
       data = data.filter((d) => d.public_metrics.like_count > likeCountFilter);
+
+      console.log(`Filtered results count by more than ${likeCountFilter} like_count: ${data.length}`);
     }
 
     return data;

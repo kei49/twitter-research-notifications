@@ -11,6 +11,7 @@ import subscribeFinanceTask from "./subscribeFinanceTask";
 import subscribeBloombergJPTask from "./subscribeBloombergJPTask";
 import subscribeStepnActivationCodesTask from "./subscribeStepnActivationCodesTask";
 import countInterestRateTask from "./countInterestRateTask";
+import searchChatGPTTask from "./searchTasks/searchChatGPTTask";
 
 
 export default async function startCron() {
@@ -23,6 +24,10 @@ export default async function startCron() {
   cron.schedule("0 9,13,19 * * *", async () => {
     await searchHackathonTask();
   });
+
+  cron.schedule("* * * * *", async () => {
+    await searchChatGPTTask();
+  })
 
   cron.schedule("0 8,9,12,15,18,21 * * *", async () => {
     await subscribeBloombergJPTask();
