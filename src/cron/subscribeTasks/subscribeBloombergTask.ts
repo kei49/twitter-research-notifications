@@ -15,7 +15,7 @@ export async function subscribeBloombergTask() {
     taskIds.subscribeBloomberg,
     slackWebhookUrls.finance
   );
-  const data = await interactor.searchByKeywords({
+  const data = await interactor.searchByQuery({
     keywords: "(Nasdaq OR Bitcoin OR China OR Japan OR BOJ)",
     theFrom: "from:business",
     notReply: true,

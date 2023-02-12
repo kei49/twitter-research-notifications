@@ -20,7 +20,7 @@ export async function pingFolloweeTweetsTask() {
 
   const likeCountFilter = 10;
 
-  const data = await interactor.searchByKeywords({
+  const data = await interactor.searchByQuery({
     keywords: "",
     theFrom: generateFolloweeQuery(followeeList),
     notReply: true,

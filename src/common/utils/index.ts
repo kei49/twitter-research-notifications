@@ -48,7 +48,7 @@ export function getTwitterMessagesForSlack(data: TweetsSearchData[]) {
     type: "section",
     text: {
       type: "mrkdwn",
-      text: `<${getTwitterLink(d.id, d.author_id)}|${removeHttps(d.text)}>`,
+      text: `<${getTwitterLink(d.id, d.author_id)}|${d.text}>`,
     },
   }));
 

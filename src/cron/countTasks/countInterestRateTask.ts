@@ -9,7 +9,7 @@ export async function countInterestRateTask() {
     granularity: "hour",
   };
 
-  const results = await twitterClient.countsRecent(interestCounts);
+  const results = await twitterClient.countRecent(interestCounts);
   const slackBlocks = results.map((r) => ({
     type: "section",
     text: {

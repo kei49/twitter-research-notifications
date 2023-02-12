@@ -30,7 +30,7 @@ export async function searchHackathonTask() {
 
   const likeCountFilter = 10;
 
-  const data = await interactor.searchByKeywords({
+  const data = await interactor.searchByQuery({
     keywords,
     theFrom: undefined,
     notReply: true,

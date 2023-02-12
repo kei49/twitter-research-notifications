@@ -22,6 +22,14 @@ export default async function startCron() {
   const disable = true;
 
   /**
+   * TESTING
+   */
+
+  cron.schedule("0 10 * * *", async () => {
+    await countChatGPTTask();
+  });
+
+  /**
    * Subscribe from specific accounts
    */
   cron.schedule("*/10 * * * *", async () => {

@@ -1,12 +1,14 @@
-import TwitterClient from "../../common/lib/twitter";
+import { chatGPTKeywords } from "../../common/constants";
+import TwitterCountSearchToSlackUsecase from "../../usecase/TwitterCountSearchToSlackUsecase";
 
 export async function countChatGPTTask() {
-  const twitterClient = new TwitterClient();
-  const interestCounts = {
-    query: "ChatGPT",
-    granularity: "hour",
-  };
-
-  const results = await twitterClient.countsRecent(interestCounts);
-  console.log("@@@@ results", results);
+  const interactor = new TwitterCountSearchToSlackUsecase();
+  const results = await interactor.searchByQuery({
+    keywords: chatGPTKeywords,
+    theFrom: undefined,
+    hasLinks: true,
+    notReply: true,
+    notRetweet: true,
+    granularity: "day"
+  });
 }

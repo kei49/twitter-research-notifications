@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { baseConfig, twitterAPI } from "../../config";
+import { BuildQuqeryData } from "../types";
 import { convertTimeInJST } from "../utils";
 
 type TweetsCountData = {
@@ -59,7 +60,7 @@ export default class TwitterClient {
     return data;
   }
 
-  async countsRecent(params: CountSearchParams) {
+  async countRecent(params: CountSearchParams) {
     const { data, totalTweetCount } = await this.countsRecentAPI(params);
 
     // console.log("block of counts: ", data.length);
@@ -93,6 +94,9 @@ export default class TwitterClient {
       console.log(
         `@@@@ got the ${data.data.length} data with next_token: ${meta.next_token}`
       );
+
+      return data.data;
+      
       if (meta.next_token) {
         return [
           ...data.data,

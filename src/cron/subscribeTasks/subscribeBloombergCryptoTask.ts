@@ -6,7 +6,7 @@ export async function subscribeBloombergCryptoTask() {
     taskIds.subscribebloombergCrypto,
     slackWebhookUrls.crypto
   );
-  const data = await interactor.searchByKeywords({
+  const data = await interactor.searchByQuery({
     keywords: "",
     theFrom: "from:crypto",
     notReply: true,

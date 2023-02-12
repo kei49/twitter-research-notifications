@@ -18,7 +18,7 @@ export default class TwitterSearchToSlackUsecase {
     this.webhookUrl = slackWebhookUrl;
   }
 
-  async searchByKeywords({
+  async searchByQuery({
     maxResults = 30,
     likeCountFilter = -1,
     ...queryInput

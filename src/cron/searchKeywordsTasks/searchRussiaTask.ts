@@ -11,7 +11,7 @@ export async function searchRussiaTask() {
     slackWebhookUrls.reutersRussia
   );
 
-  const data = await interactor.searchByKeywords({
+  const data = await interactor.searchByQuery({
     keywords: "ロシア",
     theFrom: "from:ReutersJapan",
     notReply: true,

@@ -20,3 +20,7 @@ export interface TwitterSearchInput extends BuildQuqeryData {
   maxResults?: number;
   likeCountFilter?: number;
 }
+
+export interface TwitterCountSearchInput extends BuildQuqeryData {
+  granularity: string;
+}

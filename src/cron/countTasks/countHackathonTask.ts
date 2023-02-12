@@ -18,5 +18,5 @@ export async function countHackathonTask() {
     granularity: "hour",
   };
 
-  await twitterClient.countsRecent(countsTest3);
+  await twitterClient.countRecent(countsTest3);
 }
