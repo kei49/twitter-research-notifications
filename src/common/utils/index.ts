@@ -2,6 +2,7 @@ import moment from "moment-timezone";
 
 import { TweetsSearchData } from "../../common/lib/twitter";
 import * as slackServices from "../../common/services/slack.service";
+import { SlackMessageInput } from "../types";
 
 /**
  * isAnd is used for connection between base and li, not used for connection between li elements
@@ -23,19 +24,24 @@ export function addListQueryWithOr(base: string, li: string[], isAnd: boolean) {
   return query;
 }
 
-export function getSlackMessageWithBlocks(username: string, text: string, data: TweetsSearchData[]) {
+export function getSlackMessageWithBlocks({
+  username,
+  text,
+  icon_emoji = ":ghost:",
+  data,
+}: SlackMessageInput) {
   const message: slackServices.Message = {
     username,
     text,
-    icon_emoji: ":ghost:",
+    icon_emoji,
     blocks: getTwitterMessagesForSlack(data).slice(0, 49), // 50件までしかnotifyできない
   };
-  return message
+  return message;
 }
 
-
 export function getTwitterMessagesForSlack(data: TweetsSearchData[]) {
-  const getTwitterLink = (id: string, author_id: string) => `https://twitter.com/${author_id}/status/${id}`;
+  const getTwitterLink = (id: string, author_id: string) =>
+    `https://twitter.com/${author_id}/status/${id}`;
   const removeHttps = (text: string) => text.split("https")[0];
 
   const slackBlocks = data.map((d) => ({
@@ -50,5 +56,5 @@ export function getTwitterMessagesForSlack(data: TweetsSearchData[]) {
 }
 
 export const convertTimeInJST = (d: string) => {
-  return moment(d).tz('Asia/Tokyo').format("YYYYMMDD-hhmm").toString();
-}
+  return moment(d).tz("Asia/Tokyo").format("YYYYMMDD-hhmm").toString();
+};

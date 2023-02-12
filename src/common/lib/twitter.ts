@@ -38,36 +38,72 @@ type SearchParams = {
 type CountSearchParams = {
   query: string;
   granularity: string;
-}
+};
 
 export default class TwitterClient {
-  private async get(path: string, params?: any) {
-    const url = twitterAPI.basePath + path;
-    const headers = { authorization: `Bearer ${baseConfig.token}` };
+  async searchRecent(params: SearchParams, likeCountFilter: number) {
+    let data = await this.searchRecentAPI(params);
 
-    console.log("requesting to ", url, headers, params);
+    if (!data) return;
 
-    if (params) {
-      const res = await axios.get(url, { params, headers });
-      return res;
+    console.log(`Original Twitter search API results count: ${data.length}`);
+
+    if (likeCountFilter !== -1) {
+      data = data.filter((d) => d.public_metrics.like_count > likeCountFilter);
+
+      console.log(
+        `Filtered results count by more than ${likeCountFilter} like_count: ${data.length}`
+      );
     }
 
-    return await axios.get(url, { headers });
+    return data;
   }
 
-  async searchRecentAPI(params: SearchParams, next_token?: string): Promise<TweetsSearchData[] | undefined> {
+  async countsRecent(params: CountSearchParams) {
+    const { data, totalTweetCount } = await this.countsRecentAPI(params);
+
+    // console.log("block of counts: ", data.length);
+    // console.log(data[0], data[data.length - 1]);
+    // console.log("total tweet count: ", totalTweetCount);
+    const results = data
+      .slice(-9)
+      .map(
+        (d) =>
+          `${d.tweet_count} counts by '${
+            params.query
+          }' query until ${convertTimeInJST(d.end)}`
+      );
+
+    console.log("results", results);
+    return results;
+  }
+
+  async searchRecentAPI(
+    params: SearchParams,
+    next_token?: string
+  ): Promise<TweetsSearchData[] | undefined> {
     try {
-      const res = await this.get(twitterAPI.searchRecentPath, next_token ? { ...params, next_token } : params);
+      const res = await this.get(
+        twitterAPI.searchRecentPath,
+        next_token ? { ...params, next_token } : params
+      );
       const data = res.data;
       const meta = data.meta;
 
-      console.log(`@@@@ got the ${data.data.length} data with next_token: ${meta.next_token}`)
+      console.log(
+        `@@@@ got the ${data.data.length} data with next_token: ${meta.next_token}`
+      );
       if (meta.next_token) {
-        return [...data.data, ...(await this.searchRecentAPI(params, meta.next_token) as TweetsSearchData[])];
+        return [
+          ...data.data,
+          ...((await this.searchRecentAPI(
+            params,
+            meta.next_token
+          )) as TweetsSearchData[]),
+        ];
       } else {
         return data.data;
       }
-
     } catch (err) {
       console.error(err);
     }
@@ -82,25 +118,44 @@ export default class TwitterClient {
     return { data, totalTweetCount };
   }
 
-  async searchRecent(
-    keywords: string,
-    sinceId?: string,
-    maxResults: number = 10,
-    likeCountFilter: number = -1,
-    theFrom?: string,
-    hasHashtags?: boolean,
-    hasLinks?: boolean,
-    notReply?: boolean,
-    notRetweet?: boolean
-  ) {
-    const from = theFrom ? ` ${theFrom}` : ""
+  private async get(path: string, params?: any) {
+    const url = twitterAPI.basePath + path;
+    const headers = { authorization: `Bearer ${baseConfig.token}` };
+
+    console.log("requesting to ", url, headers, params);
+
+    if (params) {
+      const res = await axios.get(url, { params, headers });
+      return res;
+    }
+
+    return await axios.get(url, { headers });
+  }
+
+  buildQuery({
+    keywords,
+    theFrom,
+    hasHashtags,
+    hasLinks,
+    notReply,
+    notRetweet,
+  }: BuildQuqeryData) {
+    const from = theFrom ? ` ${theFrom}` : "";
     const hashtags = hasHashtags ? "has:hashtags" : "";
     const links = hasLinks ? " has:links" : "";
     const reply = notReply ? " -is:reply" : "";
     const retweet = notRetweet ? " -is:retweet" : "";
+    const query = `${keywords}${from}${links}${hashtags}${reply}${retweet}`;
+    return query;
+  }
 
+  buildSearchParams(
+    query: string,
+    maxResults: number = 10,
+    sinceId?: string
+  ): SearchParams {
     const params: SearchParams = {
-      query: `${keywords}${from}${links}${hashtags}${reply}${retweet}`,
+      query,
       "tweet.fields": "author_id,public_metrics,text,entities",
     };
 
@@ -112,30 +167,13 @@ export default class TwitterClient {
       params.since_id = sinceId;
     }
 
-    let data = await this.searchRecentAPI(params);
-
-    if (!data) return;
-
-    console.log(`Original Twitter search API results count: ${data.length}`);
-
-    if (likeCountFilter !== -1) {
-      data = data.filter((d) => d.public_metrics.like_count > likeCountFilter);
-
-      console.log(`Filtered results count by more than ${likeCountFilter} like_count: ${data.length}`);
-    }
-
-    return data;
+    return params;
   }
 
-  async countsRecent(params: CountSearchParams) {
-    const { data, totalTweetCount } = await this.countsRecentAPI(params);
-
-    // console.log("block of counts: ", data.length);
-    // console.log(data[0], data[data.length - 1]);
-    // console.log("total tweet count: ", totalTweetCount);
-    const results = data.slice(-9).map((d) => `${d.tweet_count} counts by '${params.query}' query until ${convertTimeInJST(d.end)}`);
-
-    console.log("results", results);
-    return results
+  buildCountSearchParams(
+    query: string,
+    granularity: string
+  ): CountSearchParams {
+    return { query, granularity };
   }
 }

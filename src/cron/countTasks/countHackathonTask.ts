@@ -1,6 +1,6 @@
-import TwitterClient from "../common/lib/twitter";
+import TwitterClient from "../../common/lib/twitter";
 
-export default async function countHackathonTask() {
+export async function countHackathonTask() {
   const twitterClient = new TwitterClient();
 
   const countsTest = {
@@ -15,8 +15,8 @@ export default async function countHackathonTask() {
 
   const countsTest3 = {
     query: "interest rate",
-    granularity: "hour"
-  }
+    granularity: "hour",
+  };
 
   await twitterClient.countsRecent(countsTest3);
 }

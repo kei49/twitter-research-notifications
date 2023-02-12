@@ -30,7 +30,7 @@ export const taskIds = {
   subscribeBloombergJP: "subscribeBloombergJP",
   subscribebloombergCrypto: "subscribebloombergCrypto",
   subscribeFinance: "subscribeFinance",
-  searchChatGPT: "searchChatGPT"
+  searchChatGPT: "searchChatGPT",
 } as const;
 
 export const slackWebhookUrls = {
@@ -46,10 +46,7 @@ export const slackWebhookUrls = {
 
 const getListFromString = (str?: string) => str?.split(",") || [];
 
-export const followeeList = getListFromString(process.env.PING_FOLLOWEE_LIST)
-
-export const stepnFolloweeList = getListFromString(process.env.STEPN_PING_FOLLOWEE_LIST)
-
+export const followeeList = getListFromString(process.env.PING_FOLLOWEE_LIST);
 
 const generateQueryReduceHelper = (acc: string, cur: string, isLast: boolean) =>
   isLast ? acc + "from:" + cur + ") " : acc + "from:" + cur + " OR ";
@@ -57,7 +54,8 @@ const generateQueryReduceHelper = (acc: string, cur: string, isLast: boolean) =>
 export const generateFolloweeQuery = (fList: string[]) =>
   fList.length > 0
     ? fList.reduce(
-        (acc, cur, i) => generateQueryReduceHelper(acc, cur, fList.length === i + 1),
+        (acc, cur, i) =>
+          generateQueryReduceHelper(acc, cur, fList.length === i + 1),
         "("
       )
     : "";

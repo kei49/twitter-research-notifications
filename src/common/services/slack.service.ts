@@ -2,17 +2,23 @@ import { Agent } from "http";
 import { IncomingWebhook } from "@slack/webhook";
 import { MessageAttachment, Block, KnownBlock } from "@slack/types";
 
-export async function sendMessage(url: string, slackBlocks?: SlackBlocks, customMessage?: Message) {
+export async function sendMessage(
+  url: string,
+  slackBlocks?: SlackBlocks,
+  customMessage?: Message
+) {
   const webhook = new IncomingWebhook(url);
 
-  const message: Message | undefined = slackBlocks ? {
-    username: "Twitter Research Notifications",
-    text: "<@kei> Latest Search!",
-    icon_emoji: ":ghost:",
-    blocks: slackBlocks.slice(0, 49), // 50件までしかnotifyできない
-  } : customMessage
+  const message: Message | undefined = slackBlocks
+    ? {
+        username: "Twitter Research Notifications",
+        text: "<@kei> Latest Search!",
+        icon_emoji: ":ghost:",
+        blocks: slackBlocks.slice(0, 49), // 50件までしかnotifyできない
+      }
+    : customMessage
     ? customMessage
-    : undefined
+    : undefined;
 
   if (!message) throw new Error("Error: Invalid Slack message");
 
