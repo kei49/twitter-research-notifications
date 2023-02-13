@@ -1,7 +1,7 @@
 import TwitterClient from "../../common/lib/twitter";
 import * as slackServices from "../../common/services/slack.service";
 import TaskLocalStorage from "../../common/localStorage";
-import { slackWebhookUrls, taskIds } from "../../config";
+import { slackChannels, slackWebhookUrls, taskIds } from "../../config";
 import LineClient from "../../common/lib/line";
 import { getSlackMessageWithBlocks } from "../../common/utils";
 import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUsecase";
@@ -13,7 +13,7 @@ import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUseca
 export async function subscribeBloombergTask() {
   const interactor = new TwitterSearchToSlackUsecase(
     taskIds.subscribeBloomberg,
-    slackWebhookUrls.finance
+    slackChannels.finance
   );
   const data = await interactor.searchByQuery({
     keywords: "(Nasdaq OR Bitcoin OR China OR Japan OR BOJ)",

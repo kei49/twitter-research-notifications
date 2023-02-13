@@ -26,6 +26,7 @@ export default class TwitterSearchToSlackUsecase {
     ...queryInput
   }: TwitterSearchInput) {
     const query = this.twitterClient.buildQuery(queryInput);
+
     const params = this.twitterClient.buildSearchParams(
       query,
       maxResults,

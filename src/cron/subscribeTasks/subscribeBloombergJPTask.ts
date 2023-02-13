@@ -1,4 +1,4 @@
-import { slackWebhookUrls, taskIds } from "../../config";
+import { slackChannels, slackWebhookUrls, taskIds } from "../../config";
 import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUsecase";
 
 /**
@@ -8,7 +8,7 @@ import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUseca
 export async function subscribeBloombergJPTask() {
   const interactor = new TwitterSearchToSlackUsecase(
     taskIds.subscribeBloombergJP,
-    slackWebhookUrls.finance
+    slackChannels.finance
   );
   const data = await interactor.searchByQuery({
     keywords: "",

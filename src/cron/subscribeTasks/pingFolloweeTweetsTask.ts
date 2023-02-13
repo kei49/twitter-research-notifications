@@ -6,6 +6,7 @@ import {
   followeeList,
   slackWebhookUrls,
   taskIds,
+  slackChannels,
 } from "../../config";
 import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUsecase";
 
@@ -15,7 +16,7 @@ import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUseca
 export async function pingFolloweeTweetsTask() {
   const interactor = new TwitterSearchToSlackUsecase(
     taskIds.pingFollowee,
-    slackWebhookUrls.followee
+    slackChannels.followee
   );
 
   const likeCountFilter = 10;

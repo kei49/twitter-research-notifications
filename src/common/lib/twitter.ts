@@ -93,7 +93,7 @@ export default class TwitterClient {
       const meta = data.meta;
 
       console.log(
-        `@@@@ got the ${data.data.length} data with next_token: ${meta.next_token}`
+        `@@@@ got the ${data.data?.length} data with next_token: ${meta.next_token}`
       );
 
       if (meta.next_token) {
@@ -145,12 +145,12 @@ export default class TwitterClient {
     lang,
   }: BuildQuqeryData) {
     const from = theFrom ? ` ${theFrom}` : "";
-    const hashtags = hasHashtags ? "has:hashtags" : "";
+    const withLang = lang ? ` lang:${lang}` : "";
+    const hashtags = hasHashtags ? " has:hashtags" : "";
     const links = hasLinks ? " has:links" : "";
     const reply = notReply ? " -is:reply" : "";
     const retweet = notRetweet ? " -is:retweet" : "";
-    const withLang = lang ? ` lang:${lang}` : "";
-    const query = `${keywords}${from}${links}${hashtags}${reply}${retweet}${withLang}`;
+    const query = `(${keywords})${from}${withLang}${links}${hashtags}${reply}${retweet}`;
     return query;
   }
 

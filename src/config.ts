@@ -34,6 +34,15 @@ export const taskIds = {
   searchChatGPT: "searchChatGPT",
 } as const;
 
+export const slackChannels = {
+  base: "twitter",
+  chatGPT: "twitter-chatgpt",
+  finance: "twitter-finance",
+  followee: "twitter-followee",
+  crypto: "twitter-crypto",
+  russia: "twitter-russia",
+};
+
 export const slackWebhookUrls = {
   base: process.env.SLACK_WEBHOOK_URL || "",
   reutersRussia: process.env.SLACK_WEBHOOK_REUTERS_RUSSIA_URL || "",

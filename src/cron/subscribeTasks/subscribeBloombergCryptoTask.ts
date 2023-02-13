@@ -1,10 +1,10 @@
-import { slackWebhookUrls, taskIds } from "../../config";
+import { slackChannels, slackWebhookUrls, taskIds } from "../../config";
 import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUsecase";
 
 export async function subscribeBloombergCryptoTask() {
   const interactor = new TwitterSearchToSlackUsecase(
     taskIds.subscribebloombergCrypto,
-    slackWebhookUrls.crypto
+    slackChannels.crypto
   );
   const data = await interactor.searchByQuery({
     keywords: "",

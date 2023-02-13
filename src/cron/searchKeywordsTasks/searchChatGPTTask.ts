@@ -1,12 +1,12 @@
 import dayjs from "dayjs";
 import { chatGPTKeywords } from "../../common/constants";
-import { slackWebhookUrls, taskIds } from "../../config";
+import { slackChannels, taskIds } from "../../config";
 import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUsecase";
 
 export async function searchChatGPTTask() {
   const interactor = new TwitterSearchToSlackUsecase(
     taskIds.searchChatGPT,
-    "twitter-chatgpt"
+    slackChannels.chatGPT
   );
 
   const likeCountFilter = 50;
@@ -19,7 +19,7 @@ export async function searchChatGPTTask() {
     notRetweet: true,
     lang: "en",
     maxResults: 100,
-    start_time: dayjs().subtract(1, "day").toDate(),
+    // start_time: dayjs().subtract(1, "day").toDate(),
     likeCountFilter,
   });
 

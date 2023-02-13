@@ -1,11 +1,11 @@
 import { addListQueryWithOr } from "../../common/utils";
-import { slackWebhookUrls, taskIds } from "../../config";
+import { slackChannels, slackWebhookUrls, taskIds } from "../../config";
 import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUsecase";
 
 export async function searchHackathonTask() {
   const interactor = new TwitterSearchToSlackUsecase(
     taskIds.searchHackathon,
-    slackWebhookUrls.base
+    slackChannels.base
   );
 
   const blockchainKeywords = [
