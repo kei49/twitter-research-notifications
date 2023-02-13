@@ -43,12 +43,23 @@ type CountSearchParams = {
 };
 
 export default class TwitterClient {
-  async searchRecent(params: SearchParams, likeCountFilter: number) {
-    let data = await this.searchRecentAPI(params);
+  async searchRecent(
+    params: SearchParams,
+    likeCountFilter: number,
+    next_token?: string
+  ) {
+    const res = await this.searchRecentAPI({ params, next_token });
+
+    let data = res?.data;
+    const nextToken = res?.next_token;
+
+    console.log("searchRecent: ", data?.length, nextToken);
 
     if (!data) return;
 
-    console.log(`Original Twitter search API results count: ${data.length}`);
+    console.log(
+      `Original Twitter search API results count: ${data.length} with next_token as ${nextToken}`
+    );
 
     if (likeCountFilter !== -1) {
       data = data.filter((d) => d.public_metrics.like_count > likeCountFilter);
@@ -58,7 +69,10 @@ export default class TwitterClient {
       );
     }
 
-    return data;
+    return {
+      data,
+      nextToken,
+    };
   }
 
   async countRecent(params: CountSearchParams) {
@@ -80,10 +94,17 @@ export default class TwitterClient {
     return results;
   }
 
-  async searchRecentAPI(
-    params: SearchParams,
-    next_token?: string
-  ): Promise<TweetsSearchData[] | undefined> {
+  async searchRecentAPI({
+    params,
+    next_token,
+    count = 1,
+  }: {
+    params: SearchParams;
+    count?: number;
+    next_token?: string;
+  }): Promise<
+    { next_token: string | undefined; data: TweetsSearchData[] } | undefined
+  > {
     try {
       const res = await this.get(
         twitterAPI.searchRecentPath,
@@ -96,16 +117,22 @@ export default class TwitterClient {
         `@@@@ got the ${data.data?.length} data with next_token: ${meta.next_token}`
       );
 
-      if (meta.next_token) {
-        return [
-          ...data.data,
-          ...((await this.searchRecentAPI(
-            params,
-            meta.next_token
-          )) as TweetsSearchData[]),
-        ];
+      if (count < 10 && meta.next_token) {
+        const results = await this.searchRecentAPI({
+          params,
+          next_token: meta.next_token,
+          count: count + 1,
+        });
+
+        return {
+          next_token: results?.next_token,
+          data: [...data.data, ...(results?.data as TweetsSearchData[])],
+        };
       } else {
-        return data.data;
+        return {
+          next_token: meta.next_token,
+          data: data.data,
+        };
       }
     } catch (err) {
       console.error(err);
@@ -144,13 +171,14 @@ export default class TwitterClient {
     notRetweet,
     lang,
   }: BuildQuqeryData) {
+    const withKeywords = keywords ? `${keywords}` : "";
     const from = theFrom ? ` ${theFrom}` : "";
     const withLang = lang ? ` lang:${lang}` : "";
     const hashtags = hasHashtags ? " has:hashtags" : "";
     const links = hasLinks ? " has:links" : "";
     const reply = notReply ? " -is:reply" : "";
     const retweet = notRetweet ? " -is:retweet" : "";
-    const query = `(${keywords})${from}${withLang}${links}${hashtags}${reply}${retweet}`;
+    const query = `${withKeywords}${from}${withLang}${links}${hashtags}${reply}${retweet}`;
     return query;
   }
 

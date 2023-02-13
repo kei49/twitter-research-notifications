@@ -1,10 +1,6 @@
-import TwitterClient from "../../common/lib/twitter";
-import * as slackServices from "../../common/services/slack.service";
-import TaskLocalStorage from "../../common/localStorage";
 import {
   generateFolloweeQuery,
   followeeList,
-  slackWebhookUrls,
   taskIds,
   slackChannels,
 } from "../../config";
@@ -19,21 +15,22 @@ export async function pingFolloweeTweetsTask() {
     slackChannels.followee
   );
 
-  const likeCountFilter = 10;
-
   const data = await interactor.searchByQuery({
     keywords: "",
     theFrom: generateFolloweeQuery(followeeList),
     notReply: true,
     notRetweet: true,
     maxResults: 100,
-    likeCountFilter,
   });
+
+  console.log("Data you got: ", data);
 
   if (!data) return;
 
+  console.log("Number of data: ", data?.length);
+
   await interactor.postResultsToSlack({
     data,
-    firstMessage: `You got tweets by your Twitter followee (more than ${likeCountFilter} likes):`,
+    firstMessage: `You got tweets by your Twitter followee likes):`,
   });
 }

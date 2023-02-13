@@ -10,13 +10,15 @@ export default class TwitterSearchToSlackUsecase {
   private twitterClient: TwitterClient;
   private taskLocalStorage: TaskLocalStorage;
   private sinceId: string | undefined;
-  private slackProvider: SlackProvider;
+  private nextToken: string | undefined;
+  private channel: string;
 
   constructor(taskId: TaskId, channel: string) {
     this.twitterClient = new TwitterClient();
     this.taskLocalStorage = new TaskLocalStorage(taskId);
     this.sinceId = this.taskLocalStorage.get("lastId") || undefined;
-    this.slackProvider = new SlackProvider(channel);
+    this.nextToken = this.taskLocalStorage.get("nextToken") || undefined;
+    this.channel = channel;
   }
 
   async searchByQuery({
@@ -33,14 +35,19 @@ export default class TwitterSearchToSlackUsecase {
       start_time,
       this.sinceId
     );
-    const data = await this.twitterClient.searchRecent(params, likeCountFilter);
+    const results = await this.twitterClient.searchRecent(
+      params,
+      likeCountFilter,
+      this.nextToken
+    );
 
-    if (!data || data.length === 0) return;
+    if (!results || !results.data || results.data.length === 0) return;
 
-    console.log("Number of data: ", data?.length);
-    this.taskLocalStorage.set("lastId", data[0].id);
+    this.taskLocalStorage.set("lastId", results.data[0].id);
+    results.nextToken &&
+      this.taskLocalStorage.set("nextToken", results.nextToken);
 
-    return data;
+    return results.data;
   }
 
   async postResultsToSlack({
@@ -48,15 +55,19 @@ export default class TwitterSearchToSlackUsecase {
     firstMessage,
     chunkSize = 5,
   }: PostSlackInput) {
-    const res = await this.slackProvider.postMessage(firstMessage);
+    console.log(`@@@ notifying data to ${this.channel}`);
+    const slackProvider = new SlackProvider(this.channel);
+    const res = await slackProvider.postMessage(firstMessage);
     const thread_ts = res["ts"];
+
+    console.log("==== using thread_ts: ", thread_ts);
 
     const chunkedMessages = getChunkedTwitterMessages(data, chunkSize);
 
     chunkedMessages.forEach(async (messages) => {
       const text = messages.join("\n");
 
-      await this.slackProvider.postMessage(text, thread_ts);
+      await slackProvider.postMessage(text, thread_ts);
     });
   }
 }

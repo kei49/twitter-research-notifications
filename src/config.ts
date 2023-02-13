@@ -41,7 +41,7 @@ export const slackChannels = {
   followee: "twitter-followee",
   crypto: "twitter-crypto",
   russia: "twitter-russia",
-};
+} as const;
 
 export const slackWebhookUrls = {
   base: process.env.SLACK_WEBHOOK_URL || "",

@@ -24,15 +24,15 @@ export default async function startCron() {
    * TESTING
    */
 
-  cron.schedule("30 * * * *", async () => {
+  cron.schedule("0 8 * * *", async () => {
     await countChatGPTTask();
   });
 
   /**
    * Subscribe from specific accounts
    */
-  cron.schedule("20,40 * * * *", async () => {
-    // every 5 minutes
+  cron.schedule("*/10 * * * *", async () => {
+    // every 10 minutes
     await pingFolloweeTweetsTask();
   });
   cron.schedule("0 8,9,12,15,18,21 * * *", async () => {
@@ -45,10 +45,10 @@ export default async function startCron() {
   /**
    * Search with keywords
    */
-  cron.schedule("* * * * *", async () => {
+  cron.schedule("0 * * * *", async () => {
     await searchChatGPTTask();
   });
-  cron.schedule("0 14 * * *", async () => {
+  cron.schedule("57 * * * *", async () => {
     await searchRussiaTask();
   });
 
