@@ -4,8 +4,7 @@ import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUseca
 
 export async function searchHackathonTask() {
   const interactor = new TwitterSearchToSlackUsecase(
-    taskIds.searchHackathon,
-    slackChannels.base
+    taskIds.searchHackathon
   );
 
   const blockchainKeywords = [
@@ -42,6 +41,7 @@ export async function searchHackathonTask() {
   if (!data) return;
 
   await interactor.postResultsToSlack({
+    channel: slackChannels.base,
     data,
     firstMessage: `Tweets about Hackathon with more than ${likeCountFilter} likes: `,
   });

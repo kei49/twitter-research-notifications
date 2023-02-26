@@ -6,7 +6,7 @@ export class SlackProvider {
   channel: string;
 
   constructor(channel: string, slackToken?: string) {
-    const token = slackToken ? slackToken : baseConfig.slackToken;
+    const token = slackToken ? slackToken : baseConfig.slackToken.base;
 
     this.web = new WebClient(token);
     this.channel = `#${channel}`;

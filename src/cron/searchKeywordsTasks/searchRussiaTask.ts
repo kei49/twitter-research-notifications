@@ -8,7 +8,6 @@ import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUseca
 export async function searchRussiaTask() {
   const interactor = new TwitterSearchToSlackUsecase(
     taskIds.searchRussia,
-    slackChannels.russia
   );
 
   const data = await interactor.searchByQuery({
@@ -22,6 +21,7 @@ export async function searchRussiaTask() {
   if (!data) return;
 
   await interactor.postResultsToSlack({
+    channel: slackChannels.russia,
     data,
     firstMessage: `<@kei> About Russia: `,
   });

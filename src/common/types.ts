@@ -35,8 +35,9 @@ export interface TwitterCountSearchInput extends BuildQuqeryData {
 }
 
 export interface PostSlackInput {
+  token?: string;
+  channel: string;
   data: TweetsSearchData[];
   firstMessage: string;
   chunkSize?: number;
-  slackToken?: string;
 }

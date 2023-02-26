@@ -1,12 +1,11 @@
 import dayjs from "dayjs";
 import { chatGPTKeywords } from "../../common/constants";
-import { slackChannels, taskIds } from "../../config";
+import { baseConfig, slackChannels, taskIds } from "../../config";
 import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUsecase";
 
 export async function searchChatGPTTask() {
   const interactor = new TwitterSearchToSlackUsecase(
     taskIds.searchChatGPT,
-    slackChannels.chatGPT
   );
 
   const likeCountFilter = 90;
@@ -28,7 +27,16 @@ export async function searchChatGPTTask() {
   if (!data) return;
 
   await interactor.postResultsToSlack({
+    token: baseConfig.slackToken.awesomeAi,
+    channel: slackChannels.chatGPT,
     data,
-    firstMessage: `<@kei> ${data.length} trending tweets (more than ${likeCountFilter} likes) about ChatGPT: `,
+    firstMessage: `${data.length} trending tweets (more than ${likeCountFilter} likes) about ChatGPT: `,
+  });
+
+  await interactor.postResultsToSlack({
+    token: baseConfig.slackToken.aiMkt,
+    channel: slackChannels.chatGPT,
+    data,
+    firstMessage: `${data.length} trending tweets (more than ${likeCountFilter} likes) about ChatGPT: `,
   });
 }

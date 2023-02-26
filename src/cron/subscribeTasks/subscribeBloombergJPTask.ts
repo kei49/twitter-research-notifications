@@ -8,7 +8,6 @@ import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUseca
 export async function subscribeBloombergJPTask() {
   const interactor = new TwitterSearchToSlackUsecase(
     taskIds.subscribeBloombergJP,
-    slackChannels.finance
   );
   const data = await interactor.searchByQuery({
     keywords: "",
@@ -21,6 +20,7 @@ export async function subscribeBloombergJPTask() {
   if (!data) return;
 
   await interactor.postResultsToSlack({
+    channel: slackChannels.finance,
     data,
     firstMessage: `<@kei> You got finance messages from BloombergJapan!`,
   });

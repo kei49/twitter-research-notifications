@@ -2,10 +2,16 @@ import * as dotenv from "dotenv";
 
 dotenv.config();
 
+const slackTokens = {
+  base: process.env.SLACK_TOKEN,
+  voicePing: process.env.SLACK_TOKEN_VOICE_PING,
+  awesomeAi: process.env.SLACK_TOKEN_AWESOME_AI,
+  aiMkt: process.env.SLACK_TOKEN_AI_MKT,
+}
+
 export const baseConfig = {
   token: process.env.BEARER_TOKEN,
-  slackToken: process.env.SLACK_TOKEN,
-  slackTokenVoicePing: process.env.SLACK_TOKEN_VOICE_PING,
+  slackToken: slackTokens,
   lineAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
   lineGroupId: process.env.LINE_GROUP_ID,
 };

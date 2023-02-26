@@ -12,7 +12,6 @@ import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUseca
 export async function pingFolloweeTweetsTask() {
   const interactor = new TwitterSearchToSlackUsecase(
     taskIds.pingFollowee,
-    slackChannels.followee
   );
 
   const data = await interactor.searchByQuery({
@@ -30,6 +29,7 @@ export async function pingFolloweeTweetsTask() {
   console.log("Number of data: ", data?.length);
 
   await interactor.postResultsToSlack({
+    channel: slackChannels.followee,
     data,
     firstMessage: `<@kei> You got tweets by your Twitter followee likes):`,
   });

@@ -1,6 +1,6 @@
 import TwitterClient, { TweetsSearchData } from "../common/lib/twitter";
 import TaskLocalStorage from "../common/localStorage";
-import { TaskId } from "../config";
+import { baseConfig, TaskId } from "../config";
 import { getChunkedTwitterMessages } from "../common/utils";
 import { PostSlackInput, TwitterSearchInput } from "../common/types";
 import { SlackProvider } from "../common/provider/slack.provider";
@@ -11,16 +11,12 @@ export default class TwitterSearchToSlackUsecase {
   private taskLocalStorage: TaskLocalStorage;
   private sinceId: string | undefined;
   private nextToken: string | undefined;
-  private channel: string;
   private usePaging?: boolean;
-  private slackToken?: string;
 
-  constructor(taskId: TaskId, channel: string, usePaging?: boolean, slackToken?: string) {
+  constructor(taskId: TaskId, usePaging?: boolean) {
     this.twitterClient = new TwitterClient();
     this.taskLocalStorage = new TaskLocalStorage(taskId);
     this.sinceId = this.taskLocalStorage.get("lastId") || undefined;
-    this.channel = channel;
-    this.slackToken = slackToken;
 
     this.usePaging = usePaging || undefined;
 
@@ -66,12 +62,15 @@ export default class TwitterSearchToSlackUsecase {
   }
 
   async postResultsToSlack({
+    token,
+    channel,
     data,
     firstMessage,
     chunkSize = 5,
   }: PostSlackInput) {
-    console.log(`@@@ notifying data to ${this.channel}`);
-    const slackProvider = new SlackProvider(this.channel, this.slackToken);
+    console.log(`@@@ notifying data to ${channel}`);
+    const slackToken = token ? token : baseConfig.slackToken.base;
+    const slackProvider = new SlackProvider(channel, slackToken);
 
     const res = await slackProvider.postMessage(firstMessage);
     const thread_ts = res["ts"];

@@ -4,7 +4,6 @@ import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUseca
 export async function subscribeBloombergCryptoTask() {
   const interactor = new TwitterSearchToSlackUsecase(
     taskIds.subscribebloombergCrypto,
-    slackChannels.crypto
   );
   const data = await interactor.searchByQuery({
     keywords: "",
@@ -17,6 +16,7 @@ export async function subscribeBloombergCryptoTask() {
   if (!data) return;
 
   await interactor.postResultsToSlack({
+    channel: slackChannels.crypto,
     data,
     firstMessage: `<@kei> You got messages from bloomberg crypto!!`,
   });

@@ -46,14 +46,14 @@ export default async function startCron() {
   /**
    * Search with keywords
    */
-  cron.schedule("*/30 * * * *", async () => {
+  cron.schedule("50 28 * * * *", async () => {
     await searchChatGPTTask();
   });
   cron.schedule("57 * * * *", async () => {
     await searchRussiaTask();
   });
 
-  cron.schedule("40 52 * * * *", async () => {
+  cron.schedule("*/30 * * * *", async () => {
     await searchVoicePingTask();
   })
 

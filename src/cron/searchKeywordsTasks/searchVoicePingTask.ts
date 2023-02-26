@@ -1,14 +1,11 @@
 import dayjs from "dayjs";
 import { voicePingKeywords } from "../../common/constants";
-import { baseConfig, slackChannels, taskIds } from "../../config";
+import { taskIds } from "../../config";
 import TwitterSearchToSlackUsecase from "../../usecase/TwitterSearchToSlackUsecase";
 
 export async function searchVoicePingTask() {
   const interactor = new TwitterSearchToSlackUsecase(
     taskIds.searchVoicePing,
-    slackChannels.voicePing,
-    undefined,
-    baseConfig.slackTokenVoicePing
   );
 
   const data = await interactor.searchByQuery({
@@ -21,6 +18,7 @@ export async function searchVoicePingTask() {
   if (!data) return;
 
   await interactor.postResultsToSlack({
+    channel: "twitter-voice-ping", // slackChannels.voicePing,
     data,
     firstMessage: `Found ${data.length} new tweets related to VoicePing business: `,
   });
