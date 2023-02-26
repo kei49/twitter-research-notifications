@@ -13,12 +13,14 @@ export default class TwitterSearchToSlackUsecase {
   private nextToken: string | undefined;
   private channel: string;
   private usePaging?: boolean;
+  private slackToken?: string;
 
-  constructor(taskId: TaskId, channel: string, usePaging?: boolean) {
+  constructor(taskId: TaskId, channel: string, usePaging?: boolean, slackToken?: string) {
     this.twitterClient = new TwitterClient();
     this.taskLocalStorage = new TaskLocalStorage(taskId);
     this.sinceId = this.taskLocalStorage.get("lastId") || undefined;
     this.channel = channel;
+    this.slackToken = slackToken;
 
     this.usePaging = usePaging || undefined;
 
@@ -69,7 +71,8 @@ export default class TwitterSearchToSlackUsecase {
     chunkSize = 5,
   }: PostSlackInput) {
     console.log(`@@@ notifying data to ${this.channel}`);
-    const slackProvider = new SlackProvider(this.channel);
+    const slackProvider = new SlackProvider(this.channel, this.slackToken);
+
     const res = await slackProvider.postMessage(firstMessage);
     const thread_ts = res["ts"];
 

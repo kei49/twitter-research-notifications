@@ -38,4 +38,5 @@ export interface PostSlackInput {
   data: TweetsSearchData[];
   firstMessage: string;
   chunkSize?: number;
+  slackToken?: string;
 }

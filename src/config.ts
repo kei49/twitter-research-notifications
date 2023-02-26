@@ -5,6 +5,7 @@ dotenv.config();
 export const baseConfig = {
   token: process.env.BEARER_TOKEN,
   slackToken: process.env.SLACK_TOKEN,
+  slackTokenVoicePing: process.env.SLACK_TOKEN_VOICE_PING,
   lineAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN,
   lineGroupId: process.env.LINE_GROUP_ID,
 };
@@ -32,6 +33,7 @@ export const taskIds = {
   subscribebloombergCrypto: "subscribebloombergCrypto",
   subscribeFinance: "subscribeFinance",
   searchChatGPT: "searchChatGPT",
+  searchVoicePing: "searchVoicePing",
 } as const;
 
 export const slackChannels = {
@@ -41,6 +43,7 @@ export const slackChannels = {
   followee: "twitter-followee",
   crypto: "twitter-crypto",
   russia: "twitter-russia",
+  voicePing: "vp-research-twitter",
 } as const;
 
 export const slackWebhookUrls = {

@@ -5,8 +5,10 @@ export class SlackProvider {
   web: WebClient;
   channel: string;
 
-  constructor(channel: string) {
-    this.web = new WebClient(baseConfig.slackToken);
+  constructor(channel: string, slackToken?: string) {
+    const token = slackToken ? slackToken : baseConfig.slackToken;
+
+    this.web = new WebClient(token);
     this.channel = `#${channel}`;
   }
 

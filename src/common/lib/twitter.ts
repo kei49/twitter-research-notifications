@@ -109,8 +109,8 @@ export default class TwitterClient {
     count = 1,
   }: {
     params: SearchParams;
-    count?: number;
     next_token?: string;
+    count?: number;
   }): Promise<
     { next_token: string | undefined; data: TweetsSearchData[] } | undefined
   > {

@@ -16,6 +16,7 @@ import {
   countInterestRateTask,
   countHackathonTask,
 } from "./countTasks";
+import { searchVoicePingTask } from "./searchKeywordsTasks/searchVoicePingTask";
 
 export default async function startCron() {
   const disable = true;
@@ -51,6 +52,10 @@ export default async function startCron() {
   cron.schedule("57 * * * *", async () => {
     await searchRussiaTask();
   });
+
+  cron.schedule("40 52 * * * *", async () => {
+    await searchVoicePingTask();
+  })
 
   /**
    * Counter summary
