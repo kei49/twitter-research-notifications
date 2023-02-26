@@ -45,7 +45,8 @@ type CountSearchParams = {
 export default class TwitterClient {
   async searchRecent(
     params: SearchParams,
-    likeCountFilter: number,
+    likeCountFilter: number = -1,
+    retweetCountFilter: number = -1,
     next_token?: string
   ) {
     const res = await this.searchRecentAPI({ params, next_token });
@@ -66,6 +67,14 @@ export default class TwitterClient {
 
       console.log(
         `Filtered results count by more than ${likeCountFilter} like_count: ${data.length}`
+      );
+    }
+
+    if (retweetCountFilter !== -1) {
+      data = data.filter((d) => d.public_metrics.retweet_count > retweetCountFilter);
+
+      console.log(
+        `Filtered results count by more than ${retweetCountFilter} retweet_count: ${data.length}`
       );
     }
 
@@ -117,7 +126,7 @@ export default class TwitterClient {
         `@@@@ got the ${data.data?.length} data with next_token: ${meta.next_token}`
       );
 
-      if (count < 10 && meta.next_token) {
+      if (count < 50 && meta.next_token) {
         const results = await this.searchRecentAPI({
           params,
           next_token: meta.next_token,
@@ -199,9 +208,7 @@ export default class TwitterClient {
 
     if (start_time) {
       params.start_time = start_time;
-    }
-
-    if (sinceId) {
+    } else if (sinceId) {
       params.since_id = sinceId;
     }
 

@@ -9,7 +9,8 @@ export async function searchChatGPTTask() {
     slackChannels.chatGPT
   );
 
-  const likeCountFilter = 50;
+  const likeCountFilter = 90;
+  const retweetCountFilter = 30;
 
   const data = await interactor.searchByQuery({
     keywords: chatGPTKeywords,
@@ -21,12 +22,13 @@ export async function searchChatGPTTask() {
     maxResults: 100,
     // start_time: dayjs().subtract(1, "day").toDate(),
     likeCountFilter,
+    retweetCountFilter,
   });
 
   if (!data) return;
 
   await interactor.postResultsToSlack({
     data,
-    firstMessage: `${data.length} trending tweets (more than ${likeCountFilter} likes) about ChatGPT: `,
+    firstMessage: `<@kei> ${data.length} trending tweets (more than ${likeCountFilter} likes) about ChatGPT: `,
   });
 }

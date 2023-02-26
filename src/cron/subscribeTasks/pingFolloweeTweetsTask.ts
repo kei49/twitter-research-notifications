@@ -31,6 +31,6 @@ export async function pingFolloweeTweetsTask() {
 
   await interactor.postResultsToSlack({
     data,
-    firstMessage: `You got tweets by your Twitter followee likes):`,
+    firstMessage: `<@kei> You got tweets by your Twitter followee likes):`,
   });
 }

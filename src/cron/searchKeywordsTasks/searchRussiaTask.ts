@@ -23,6 +23,6 @@ export async function searchRussiaTask() {
 
   await interactor.postResultsToSlack({
     data,
-    firstMessage: `About Russia: `,
+    firstMessage: `<@kei> About Russia: `,
   });
 }

@@ -27,6 +27,7 @@ export interface TwitterSearchInput extends BuildQuqeryData {
   maxResults?: number;
   start_time?: Date;
   likeCountFilter?: number;
+  retweetCountFilter?: number;
 }
 
 export interface TwitterCountSearchInput extends BuildQuqeryData {
