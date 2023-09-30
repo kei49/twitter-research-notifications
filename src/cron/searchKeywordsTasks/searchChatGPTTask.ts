@@ -33,10 +33,10 @@ export async function searchChatGPTTask() {
     firstMessage: `${data.length} trending tweets (more than ${likeCountFilter} likes) about ChatGPT: `,
   });
 
-  await interactor.postResultsToSlack({
-    token: baseConfig.slackToken.aiMkt,
-    channel: slackChannels.chatGPT,
-    data,
-    firstMessage: `${data.length} trending tweets (more than ${likeCountFilter} likes) about ChatGPT: `,
-  });
+  // await interactor.postResultsToSlack({
+  //   token: baseConfig.slackToken.aiMkt,
+  //   channel: slackChannels.chatGPT,
+  //   data,
+  //   firstMessage: `${data.length} trending tweets (more than ${likeCountFilter} likes) about ChatGPT: `,
+  // });
 }

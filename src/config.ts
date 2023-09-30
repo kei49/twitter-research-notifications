@@ -49,7 +49,7 @@ export const slackChannels = {
   followee: "twitter-followee",
   crypto: "twitter-crypto",
   russia: "twitter-russia",
-  voicePing: "vp-research-twitter",
+  voicePing: "twitter-voiceping",
 } as const;
 
 export const slackWebhookUrls = {

@@ -36,7 +36,7 @@ export default async function startCron() {
     // every 10 minutes
     await pingFolloweeTweetsTask();
   });
-  cron.schedule("0 8,9,12,15,18,21 * * *", async () => {
+  cron.schedule("14 8,9,12,15,18,21 * * *", async () => {
     // at 5 minutes every hour
     await subscribeBloombergTask();
     await subscribeBloombergJPTask();
@@ -46,16 +46,16 @@ export default async function startCron() {
   /**
    * Search with keywords
    */
-  cron.schedule("50 28 * * * *", async () => {
+  cron.schedule("0 */2 * * *", async () => {
     await searchChatGPTTask();
   });
-  cron.schedule("57 * * * *", async () => {
+  cron.schedule("58 9,19 * * *", async () => {
     await searchRussiaTask();
   });
 
-  cron.schedule("*/30 * * * *", async () => {
+  cron.schedule("0 */3 * * *", async () => {
     await searchVoicePingTask();
-  })
+  });
 
   /**
    * Counter summary

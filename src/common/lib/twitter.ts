@@ -180,7 +180,7 @@ export default class TwitterClient {
     notRetweet,
     lang,
   }: BuildQuqeryData) {
-    const withKeywords = keywords ? `${keywords}` : "";
+    const withKeywords = keywords ? `(${keywords})` : "";
     const from = theFrom ? ` ${theFrom}` : "";
     const withLang = lang ? ` lang:${lang}` : "";
     const hashtags = hasHashtags ? " has:hashtags" : "";
